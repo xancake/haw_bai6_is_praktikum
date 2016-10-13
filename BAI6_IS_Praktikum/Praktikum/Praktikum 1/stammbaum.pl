@@ -37,12 +37,12 @@ verheiratet(saskia, kain).
 
 verheiratet(X, Y) :- verheiratet(Y, X).
 
+sohn(Sohn, Ich) :- mann(Sohn), kind(Sohn, Ich).
+tochter(Tochter, Ich) :- frau(Tochter), kind(Tochter, Ich).
+
 elter(Elter, Ich) :- kind(Ich, Elter).
 mutter(Mutter, Ich) :- frau(Mutter), elter(Mutter, Ich).
 vater(Vater, Ich) :- mann(Vater), elter(Vater, Ich).
-
-sohn(Sohn, Ich) :- mann(Sohn), kind(Sohn, Ich).
-tochter(Tochter, Ich) :- frau(Tochter), kind(Tochter, Ich).
 
 geschwister(X, Ich) :- vater(V, X), mutter(M, X), vater(V, Ich), mutter(M, Ich), X\=Ich. %% X\=Ich muss am Ende stehen, da Ich vor kind(Ich, Vater) nicht belegt bin
 bruder(Bruder, Ich) :- mann(Bruder), geschwister(Bruder, Ich).
