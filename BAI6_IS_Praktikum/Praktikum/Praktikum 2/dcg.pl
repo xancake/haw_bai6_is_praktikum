@@ -1,26 +1,33 @@
 :- consult('../Praktikum 1/stammbaum').
 :- consult(readsentence).
 
-solve(Satz) :-
-        s(Term, Satz, []),
+frage() :-
+        write('Frage: '),
+        read_sentence(Input),
         
-        %%arg(Arity, Term, _), functor(Term, Functor, Arity), arg(1, Term, P1),
-        %%write(Functor), write(' '), write(Arity), write(' P1: '), write(P1), nl,
+        write(Input), write(' ==> '),
+        append(Satz, ['?'], Input),
+        write(Satz), nl,
+        
+        solve(Satz, Antwort),
+        write('Antwort: '), write(Antwort), nl, nl,
+        frage().
 
+solve(Satz, Antwort) :-
+        s(Term, Satz, []),
         write(Term), write(' ==> '),
         call(Term),
         write(Term), nl,
-        
-        %% TODO: Antwortsätze erzeugen
-        %% Bisher wird zum Beispiel für vater(harald,abel) [harald,ist] als Antwort erzeugt, richtiger wäre aber [harald,ist,der,vater,von,abel]
-        %%
-        %% Danach müssen wir noch mit Multiplizität (Plural) umgehen können:
-        %%     [wer,sind,die,eltern,von,abel] --> findall(X, elter(X, abel), Z), write(Z)
-        %% Der Antwortsatz hierfür müsste ungefähr so lauten:
-        %%     [wer,sind,die,eltern,von,abel] --> [harald,und,luise,sind,die,eltern,von,abel] oder [die,elter,von,abel,sind,harald,und,luise]
-        
-        antw(Term, Antwort, []),
-        write('Antwort: '), write(Antwort).
+        antw(Term, Antwort, []).
+
+%% TODOs:
+%%
+%% Feminim und Maskulin unterscheiden (damit wir keine Ausgabe ala "X ist der Oma von Y" bekommen
+%%
+%% Mit Multiplizität (Plural) umgehen angehen:
+%%     [wer,sind,die,eltern,von,abel] --> findall(X, elter(X, abel), Z), write(Z)
+%% Der Antwortsatz hierfür müsste ungefähr so lauten:
+%%     [wer,sind,die,eltern,von,abel] --> [harald,und,luise,sind,die,eltern,von,abel] oder [die,elter,von,abel,sind,harald,und,luise]
 
 %% Satz
 s(Sem)    --> vp(SemVP, Num), np(SemNP, Num), {SemNP=[_,SemVP,_|_], Sem=..SemNP}.
@@ -61,9 +68,6 @@ lex(wessen,  ip, singular, _Wer).
 lex(X, en, singular, X) :- mann(X).
 lex(X, en, singular, X) :- frau(X).
 
-%% Alle Prädikate aus stammbaum mit 2 Parametern hinzufügen (TODO: wie schränkt man das entsprechend ein?)
-%%lex(X,  n, singular, X) :- functor(_, X, 2).
-
 lex(verheiratet, n, singular, verheiratet).
 lex(kind, n, singular, kind).
 lex(kinder, n, plural, kind).
@@ -87,7 +91,7 @@ lex(cousin, n, singular, cousin).
 lex(cousine, n, singular, cousine).
 lex(grosselter, n, singular, grosselter).
 lex(grosseltern, n, plural, grosselter).
-lex(oma, n, singular, grosselter).
-lex(opa, n, singular, grosselter).
+lex(oma, n, singular, oma).
+lex(opa, n, singular, opa).
 lex(grosstante, n, singular, grosstante).
 lex(grossonkel, n, singular, grossonkel).
