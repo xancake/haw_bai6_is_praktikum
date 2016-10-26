@@ -23,21 +23,20 @@ solve(Satz) :-
         write('Antwort: '), write(Antwort).
 
 %% Satz
-s(Sem) --> vp(SemVP, Num), np(SemNP, Num), {SemNP=[_,SemVP,_|_], Sem=..SemNP}.
+s(Sem)    --> vp(SemVP, Num), np(SemNP, Num), {SemNP=[_,SemVP,_|_], Sem=..SemNP}.
+s(Sem)    --> vp(SemVP, Num), np(SemNP, Num), {SemVP=[_,SemNP,_|_], Sem=..SemVP}.
 antw(Sem) --> {Sem=..SemVP, SemVP=[_,SemNP,_|_]}, np(SemNP, Num), vp(SemVP, Num).
 
 %% Nominalphrasen
 np(SemEN, Num) --> en(SemEN, Num).
 np(SemN, Num)  --> art(_SemArt, Num), n(SemN, Num).
-np(Sem, Num)   --> art(_SemArt, Num), n(SemN, Num), pp(SemPP, Num), {append([SemN], SemPP, Sem)}.
-np(Sem, Num)   --> pp(SemPP, Num), np(SemNP, Num), {SemPP=[_|Rest], append([SemNP], Rest, Sem)}.
+np(Sem, Num)   --> art(_SemArt, Num), n(SemN, Num), {append([SemN], SemPP, Sem)}, pp(SemPP, Num).  % Das append muss vor dem pp, damit wir nicht endlos in die Tiefe laufen (weil pp -> np -> pp -> np -> ...)
 
 %% Präpositionalphrasen
 pp([_,SemNP], Num) --> p(_SemP, Num), np(SemNP, Num).
 %%pp --> p, ?.
 
 %% Verbalphrasen
-vp(_,Num)      --> v(_SemV, Num).
 vp(SemNP, Num) --> v(_SemV, Num), np(SemNP, _Num).
 vp(SemIP, Num) --> ip(SemIP, _Num), v(_SemV, Num).
 
@@ -50,25 +49,6 @@ art(Sem, Num) --> [X], {lex(X, art, Num, Sem)}. %% Artikel
  ip(Sem, Num) --> [X], {lex(X,  ip, Num, Sem)}. %% Interrogativpronomen
 
 %% Lexikon
-:- assert(lex(ist,      v, singular, ist)).
-:- assert(lex(sind,     v, plural,   ist)).
-:- assert(lex(der,    art,        _, artikel)).
-:- assert(lex(die,    art,        _, artikel)).
-:- assert(lex(das,    art,        _, artikel)).
-:- assert(lex(von,      p,        _, von)).
-:- assert(lex(vom,      p,        _, von)).
-:- assert(lex(wer,     ip, singular, _Wer)).
-:- assert(lex(wessen,  ip, singular, _Wer)).
-
-%% Alle Namen hinzufügen
-:- assert(lex(X, en, singular, X) :- mann(X)).
-:- assert(lex(X, en, singular, X) :- frau(X)).
-
-%% Alle Prädikate aus stammbaum mit 2 Parametern hinzufügen (TODO: wie schränkt man das entsprechend ein?)
-:- assert(lex(X,  n, singular, X) :- functor(_, X, 2)).
-
-/*
-%% Lexikon (OLD)
 lex(ist,   v, singular, ist).
 lex(der, art, _, artikel).
 lex(die, art, _, artikel).
@@ -78,19 +58,11 @@ lex(vom,   p, _, von).
 lex(wer,  ip, singular, _Wer).
 lex(wessen,  ip, singular, _Wer).
 
-lex(adam,     en, singular, adam).
-lex(harald,   en, singular, harald).
-lex(horst,    en, singular, horst).
-lex(abel,     en, singular, abel).
-lex(kain,     en, singular, kain).
-lex(anton,    en, singular, anton).
-lex(bernhard, en, singular, bernhard).
-lex(bernd,    en, singular, bernd).
-lex(eva,      en, singular, eva).
-lex(luise,    en, singular, luise).
-lex(barbel,   en, singular, barbel).
-lex(saskia,   en, singular, saskia).
-lex(ingelore, en, singular, ingelore).
+lex(X, en, singular, X) :- mann(X).
+lex(X, en, singular, X) :- frau(X).
+
+%% Alle Prädikate aus stammbaum mit 2 Parametern hinzufügen (TODO: wie schränkt man das entsprechend ein?)
+%%lex(X,  n, singular, X) :- functor(_, X, 2).
 
 lex(verheiratet, n, singular, verheiratet).
 lex(kind, n, singular, kind).
@@ -119,4 +91,3 @@ lex(oma, n, singular, grosselter).
 lex(opa, n, singular, grosselter).
 lex(grosstante, n, singular, grosstante).
 lex(grossonkel, n, singular, grossonkel).
-*/
