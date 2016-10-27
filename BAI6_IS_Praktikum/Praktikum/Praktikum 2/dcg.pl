@@ -25,8 +25,8 @@ solve(Satz, Antwort) :-
         write(Term), nl,
         antw(Term, Antwort, []).
 
-%% TODOs:
-%% Mit Multiplizität (Plural) umgehen angehen:
+%% Wollen wir? Pflicht war das ja nicht:
+%% Mit Multiplizität (Plural) umgehen können:
 %%     [wer,sind,die,eltern,von,abel] --> findall(X, elter(X, abel), Z), write(Z)
 %% Der Antwortsatz hierfür müsste ungefähr so lauten:
 %%     [wer,sind,die,eltern,von,abel] --> [harald,und,luise,sind,die,eltern,von,abel] oder [die,elter,von,abel,sind,harald,und,luise]
