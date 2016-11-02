@@ -57,9 +57,16 @@ state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State
 state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 
-/*eval_path([(_,State,Value)|RestPath]) :-
+eval_path([(_,State,Value)|RestPath]) :-
   eval_state(State,"Rest des Literals bzw. der Klausel"
-  "Value berechnen".*/
+  "Value berechnen".
+eval_state(State, Value) :-
+  goal_description(GoalState),
+  append(State, GoalState, Temp),
+  list_to_set(Temp, TempSet),
+  length(TempSet, TempValue),
+  length(GoalState, GoalValue),
+  Value is GoalValue - TempValue.
 
   
 %action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
