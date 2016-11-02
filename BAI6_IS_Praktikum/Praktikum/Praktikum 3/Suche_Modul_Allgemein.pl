@@ -56,7 +56,7 @@ generate_new_paths_help([FirstChild|RestChildren],Path,States,RestNewPaths):-
 
 % Ansonsten, also falls der Kindzustand noch nicht im Pfad vorhanden war, wird er als 
 % Nachfolge-Zustand eingebaut.
-generate_new_paths_help([FirstChild|RestChildren],Path,States,[[FirstChild|Path]|RestNewPaths]):- 
+generate_new_paths_help([FirstChild|RestChildren],Path,States,[[FirstChild|Path]|RestNewPaths]) :-
   generate_new_paths_help(RestChildren,Path,States,RestNewPaths).
 
  
@@ -68,7 +68,7 @@ write_action([[(Action,_)|_]|_])      :- nl,write('Action: '),write(Action),nl.
 write_next_state([[_,(_,State)|_]|_]) :- nl,write('Go on with: '),write(State),nl.
 write_state([[(_,State)|_]|_])        :- write('New State: '),write(State),nl.
 write_fail(depth,[[(_,State)|_]|_])   :- nl,write('FAIL, go on with: '),write(State),nl.
-write_fail(_,_)                       :-  nl,write('FAIL').
+write_fail(_,_)                       :- nl,write('FAIL').
 
 
 % Alle Strategien: Keine neuen Pfade vorhanden

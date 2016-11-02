@@ -1,3 +1,6 @@
+:- consult('Suche_Modul_Allgemein.pl').
+:- consult('Suche_Modul_Informierte_Suche.pl').
+
 % Die Schnittstelle umfasst
 %   start_description   ;Beschreibung des Startzustands
 %   start_node          ;Test, ob es sich um einen Startknoten handelt
