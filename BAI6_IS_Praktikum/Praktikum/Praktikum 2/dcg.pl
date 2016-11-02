@@ -56,25 +56,19 @@ solve(Satz, Antwort) :-
         %write(Term), nl,
         
         antw(Sem, Antwort, []).
-        
-notContainsList([])    :- true.
-notContainsList([K|R]) :- atom(K), notContainsList(R).
-notContainsList([K|R]) :- var(K), notContainsList(R).
 
 verarbeite(EListe, AListe) :- atom(EListe), EListe=AListe.
+verarbeite(EListe, AListe) :- var(EListe),  EListe=AListe.
 verarbeite(EListe, AListe) :-
-        %EListe=[_,_,_],
-        notContainsList(EListe),
-        Funktion=..EListe,
-        call(Funktion),
-        arg(1, Funktion, AListe).
-verarbeite(EListe, AListe) :-
+        not(var(EListe)),
         EListe = [Funktor|Rest1],
         Rest1  = [Arg1|Rest2],
         Rest2  = [Arg2],
         verarbeite(Arg1, Erg1),
         verarbeite(Arg2, Erg2),
-        AListe =..[Funktor, Erg1, Erg2].
+        Funktion =..[Funktor, Erg1, Erg2],
+        call(Funktion),
+        arg(1, Funktion, AListe).
 
 %% Satz
 s(SemNP)    --> v(_, Num), np(SemEN, _, Sex), np(SemNP, Num, Sex), {SemNP=[_,SemEN,_|_]}.
