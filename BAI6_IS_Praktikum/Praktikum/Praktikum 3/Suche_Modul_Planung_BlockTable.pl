@@ -1,3 +1,6 @@
+:- consult('Suche_Modul_Allgemein.pl').
+:- consult('Suche_Modul_Informierte_Suche.pl').
+
 % Die Schnittstelle umfasst
 %   start_description   ;Beschreibung des Startzustands
 %   start_node          ;Test, ob es sich um einen Startknoten handelt
@@ -6,7 +9,6 @@
 %                        von Zustandsbeschreibungen enthalten ist
 %   expand              ;Berechnung der Kind-Zustandsbeschreibungen
 %   eval-path           ;Bewertung eines Pfades
-
 
 start_description([
   block(block1),
@@ -39,51 +41,32 @@ goal_description([
 ]).
 
 
-start_node((start,_,_)).
 
-goal_node((_,State,_)):-
-  "Zielbedingungen einlesen"
-  "Zustand gegen Zielbedingungen testen".
+
+start_node((start,_,_)).
+goal_node((_,State,_)) :- goal_description(GoalState), subtract(State, GoalState, []).
 
 
 % Aufgrund der Komplexität der Zustandsbeschreibungen kann state_member nicht auf 
 % das Standardprädikat member zurückgeführt werden.
-state_member(_,[]):- !,fail.
-
-state_member(State,[FirstState|_]):-
-  "Test, ob State bereits durch FirstState beschrieben war. Tipp: Eine 
-  Lösungsmöglichkeit besteht in der Verwendung einer Mengenoperation, z.B. subtract"  ,!.  
+state_member(_,[]) :- !, fail.
+state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State=FirstState, !.
+% "Test, ob State bereits durch FirstState beschrieben war. Tipp: Eine Lösungsmöglichkeit besteht in der Verwendung einer Mengenoperation, z.B. subtract"  ,!.
 
 % Es ist sichergestellt, dass die beiden ersten Klauseln nicht zutreffen.
-state_member(State,[_|RestStates]):-  
-  "rekursiver Aufruf".
+state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 
-eval_path([(_,State,Value)|RestPath]):-
+/*eval_path([(_,State,Value)|RestPath]) :-
   eval_state(State,"Rest des Literals bzw. der Klausel"
-  "Value berechnen".
+  "Value berechnen".*/
 
   
-
-action(pick_up(X),
-       [handempty, clear(X), on(table,X)],
-       [handempty, clear(X), on(table,X)],
-       [holding(X)]).
-
-action(pick_up(X),
-       [handempty, clear(X), on(Y,X), block(Y)],
-       [handempty, clear(X), on(Y,X)],
-       [holding(X), clear(Y)]).
-
-action(put_on_table(X),
-       [holding(X)],
-       [holding(X)],
-       [handempty, clear(X), on(table,X)]).
-
-action(put_on(Y,X),
-       [holding(X), clear(Y)],
-       [holding(X), clear(Y)],
-       [handempty, clear(X), on(Y,X)]).
+%action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
+action(pick_up(X),      [handempty, clear(X), on(table,X)],       [handempty, clear(X), on(table,X)], [holding(X)]).
+action(pick_up(X),      [handempty, clear(X), on(Y,X), block(Y)], [handempty, clear(X), on(Y,X)],     [holding(X), clear(Y)]).
+action(put_on_table(X), [holding(X)],                             [holding(X)],                       [handempty, clear(X), on(table,X)]).
+action(put_on(Y,X),     [holding(X), clear(Y)],                   [holding(X), clear(Y)],             [handempty, clear(X), on(Y,X)]).
 
 
 % Hilfskonstrukt, weil das PROLOG "subset" nicht die Unifikation von Listenelementen 
@@ -91,12 +74,11 @@ action(put_on(Y,X),
 mysubset([],_).
 mysubset([H|T],List) :- member(H,List), mysubset(T,List).
 
-
-expand_help(State,Name,NewState):-
-  "Action suchen"
-  "Conditions testen"
-  "Del-List umsetzen"
-  "Add-List umsetzen".
   
 expand((_,State,_), Result) :- findall((Name,NewState,_), expand_help(State,Name,NewState), Result).
 
+expand_help(State,Name,NewState) :-
+        action(Name, Pruef, Del, Add),
+        mysubset(Pruef, State),
+        subtract(State, Del, Erg),
+        append(Erg, Add, NewState).
