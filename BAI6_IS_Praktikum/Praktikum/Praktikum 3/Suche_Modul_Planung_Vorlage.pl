@@ -1,11 +1,11 @@
 % Die Schnittstelle umfasst
-%   start_description	;Beschreibung des Startzustands
+%   start_description   ;Beschreibung des Startzustands
 %   start_node          ;Test, ob es sich um einen Startknoten handelt
 %   goal_node           ;Test, ob es sich um einen Zielknoten handelt
 %   state_member        ;Test, ob eine Zustandsbeschreibung in einer Liste 
 %                        von Zustandsbeschreibungen enthalten ist
 %   expand              ;Berechnung der Kind-Zustandsbeschreibungen
-%   eval-path		;Bewertung eines Pfades
+%   eval-path           ;Bewertung eines Pfades
 
 
 start_description([
@@ -21,7 +21,7 @@ start_description([
   clear(block3),
   clear(block4), %mit Block4
   handempty
-  ]).
+]).
 
 goal_description([
   block(block1),
@@ -36,8 +36,7 @@ goal_description([
   clear(block3),
   clear(block2),
   handempty
-  ]).
-
+]).
 
 
 start_node((start,_,_)).
@@ -47,17 +46,15 @@ goal_node((_,State,_)):-
   "Zustand gegen Zielbedingungen testen".
 
 
-
 % Aufgrund der Komplexität der Zustandsbeschreibungen kann state_member nicht auf 
 % das Standardprädikat member zurückgeführt werden.
-%  
 state_member(_,[]):- !,fail.
 
 state_member(State,[FirstState|_]):-
   "Test, ob State bereits durch FirstState beschrieben war. Tipp: Eine 
   Lösungsmöglichkeit besteht in der Verwendung einer Mengenoperation, z.B. subtract"  ,!.  
 
-%Es ist sichergestellt, dass die beiden ersten Klauseln nicht zutreffen.
+% Es ist sichergestellt, dass die beiden ersten Klauseln nicht zutreffen.
 state_member(State,[_|RestStates]):-  
   "rekursiver Aufruf".
 
@@ -91,11 +88,8 @@ action(put_on(Y,X),
 
 % Hilfskonstrukt, weil das PROLOG "subset" nicht die Unifikation von Listenelementen 
 % durchführt, wenn Variablen enthalten sind. "member" unifiziert hingegen.
-%
 mysubset([],_).
-mysubset([H|T],List):-
-  member(H,List),
-  mysubset(T,List).
+mysubset([H|T],List) :- member(H,List), mysubset(T,List).
 
 
 expand_help(State,Name,NewState):-
@@ -104,31 +98,5 @@ expand_help(State,Name,NewState):-
   "Del-List umsetzen"
   "Add-List umsetzen".
   
-expand((_,State,_),Result):-
-  findall((Name,NewState,_),expand_help(State,Name,NewState),Result).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+expand((_,State,_), Result) :- findall((Name,NewState,_), expand_help(State,Name,NewState), Result).
 
