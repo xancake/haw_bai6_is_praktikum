@@ -71,94 +71,94 @@ verarbeite(EListe, AListe) :-
         arg(1, Funktion, AListe).
 
 %% Satz
-s(SemNP)    --> v(_, Num), np(SemEN, _, Sex), np(SemNP, Num, Sex), {SemNP=[_,SemEN,_|_]}.
-s(SemVP)    --> np(SemNP, Num, Sex), vp(SemVP, Num, Sex), {SemVP=[_,SemNP,_|_]}.
-antw(SemVP) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex), vp(SemVP, Num, Sex).
+s(SemNP)    --> v(_, Num), np(SemEN, _, Sex, _), np(SemNP, Num, Sex, nominativ), {SemNP=[_,SemEN,_|_]}.
+s(SemVP)    --> np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex), {SemVP=[_,SemNP,_|_]}.
+antw(SemVP) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex).
 
 %% Nominalphrasen
-np(SemEN, Num, Sex)  --> en(SemEN, Num, Sex).
-np(SemN,  Num, Sex)  --> art(_, Num, Sex), n(SemN, Num, Sex).
-np(Sem,   Num, SexN) --> art(_, Num, SexN), n(SemN, Num, SexN), {append([SemN], SemPP, Sem)}, pp(SemPP, _, _).  % Das append muss vor dem pp, damit wir nicht endlos in die Tiefe laufen (weil pp -> np -> pp -> np -> ...)
-np(SemIP, Num, _)    --> ip(SemIP, Num).
-np(Sem,   Num, _)    --> en(SemEN1, _, _), k(_, Num), en(SemEN2, _, _), {Sem=[SemEN1, SemEN2]}.
+np(SemEN, Num, Sex, _)     --> en(SemEN, Num, Sex).
+np(SemN,  Num, Sex, Fall)  --> art(_, Num, Sex, Fall), n(SemN, Num, Sex, Fall).
+np(Sem,   Num, SexN, Fall) --> art(_, Num, SexN, Fall), n(SemN, Num, SexN, Fall), {append([SemN], SemPP, Sem)}, pp(SemPP, _, _).  % Das append muss vor dem pp, damit wir nicht endlos in die Tiefe laufen (weil pp -> np -> pp -> np -> ...)
+np(SemIP, Num, _, _)       --> ip(SemIP, Num).
+np(Sem,   Num, _, _)       --> en(SemEN1, _, _), k(_, Num), en(SemEN2, _, _), {Sem=[SemEN1, SemEN2]}.
 
 %% Präpositionalphrasen
-pp([_,SemNP], Num, Sex) --> p(_SemP, Num), np(SemNP, Num, Sex).
+pp([_,SemNP], Num, Sex) --> p(_SemP, Num), np(SemNP, Num, Sex, dativ).
 
 %% Verbalphrasen
-vp(SemNP, Num, Sex) --> v(_SemV, Num), np(SemNP, Num, Sex).
+vp(SemNP, Num, Sex) --> v(_SemV, Num), np(SemNP, Num, Sex, nominativ).
 vp(SemIP, Num, _)   --> ip(SemIP, _Num), v(_SemV, Num).
 
 %% Terminal-Symbole
- en(Sem, Num, Sex) --> [X], {lex(X,  en, Num, Sex, Sem)}. %% Eigenname
-art(Sem, Num, Sex) --> [X], {lex(X, art, Num, Sex, Sem)}. %% Artikel
-  n(Sem, Num, Sex) --> [X], {lex(X,   n, Num, Sex, Sem)}. %% Nomen
-  p(Sem, Num)      --> [X], {lex(X,   p, Num, Sem)}. %% Präposition
-  v(Sem, Num)      --> [X], {lex(X,   v, Num, Sem)}. %% Verb
- ip(Sem, Num)      --> [X], {lex(X,  ip, Num, Sem)}. %% Interrogativpronomen
-  k(Sem, Num)      --> [X], {lex(X,   k, Num, Sem)}. %% Konjunktion
+ en(Sem, Num, Sex)       --> [X], {lex(X,  en, Num, Sex, Sem)}. %% Eigenname
+art(Sem, Num, Sex, Fall) --> [X], {lex(X, art, Num, Sex, Fall, Sem)}. %% Artikel
+  n(Sem, Num, Sex, Fall) --> [X], {lex(X,   n, Num, Sex, Fall, Sem)}. %% Nomen
+  p(Sem, Num)            --> [X], {lex(X,   p, Num, Sem)}. %% Präposition
+  v(Sem, Num)            --> [X], {lex(X,   v, Num, Sem)}. %% Verb
+ ip(Sem, Num)            --> [X], {lex(X,  ip, Num, Sem)}. %% Interrogativpronomen
+  k(Sem, Num)            --> [X], {lex(X,   k, Num, Sem)}. %% Konjunktion
 
 %% Lexikon
 lex(von,    p,  _,         von).
-lex(vom,    p,  _,         von).
+%lex(vom,    p,  _,         von).
 lex(wer,    ip, _,        _Wer).
-lex(wessen, ip, _,        _Wer).
+%lex(wessen, ip, _,        _Wer).
 lex(ist,    v,  singular,  ist).
 lex(sind,   v,  plural,    ist).
 lex(und,    k,  plural,    und).
 
-lex(der, art, singular, maskulin, artikel).
-lex(die, art, singular, feminin,  artikel).
-lex(das, art, singular, _,        artikel).
-lex(dem, art, singular, maskulin, artikel).
-lex(der, art, singular, feminin,  artikel).
-lex(die, art, plural,   _,        artikel).
-
 lex(X, en, singular, maskulin, X) :- mann(X).
 lex(X, en, singular, feminin,  X) :- frau(X).
 
-lex(verheiratet,     n, singular, _,        verheiratet).
-lex(kind,            n, singular, _,        kind).
-lex(kinder,          n, plural,   _,        kind).
-lex(sohn,            n, singular, maskulin, sohn).
-lex(soehne,          n, plural,   maskulin, sohn).
-lex(tochter,         n, singular, feminin,  tochter).
-lex(toechter,        n, plural,   feminin,  tochter).
-lex(eltern,          n, plural,   _,        elter).
-lex(vater,           n, singular, maskulin, vater).
-lex(mutter,          n, singular, feminin,  mutter).
-lex(geschwister,     n, plural,   _,        geschwister).
-lex(bruder,          n, singular, maskulin, bruder).
-lex(brueder,         n, plural,   maskulin, bruder).
-lex(schwester,       n, singular, feminin,  schwester).
-lex(schwestern,      n, plural,   feminin,  schwester).
-lex(tante,           n, singular, feminin,  tante).
-lex(tanten,          n, plural,   feminin,  tante).
-lex(onkel,           n, singular, maskulin, onkel).
-lex(oenkel,          n, plural,   maskulin, onkel).
-lex(neffe,           n, singular, maskulin, neffe).
-lex(neffen,          n, singular, maskulin, neffe).
-lex(nichte,          n, singular, feminin,  nichte).
-lex(nichten,         n, plural,   feminin,  nichte).
-lex(cousin,          n, singular, maskulin, cousin).
-lex(cousins,         n, plural,   maskulin, cousin).
-lex(cousine,         n, singular, feminin,  cousine).
-lex(cousinen,        n, plural,   feminin,  cousine).
-lex(grosseltern,     n, plural,   _,        grosselter).
-lex(oma,             n, singular, feminin,  oma).
-lex(omas,            n, plural,   feminin,  oma).
-lex(grossmutter,     n, singular, feminin,  oma).
-lex(grossmuetter,    n, plural,   feminin,  oma).
-lex(opa,             n, singular, maskulin, opa).
-lex(opas,            n, plural,   maskulin, opa).
-lex(grossvater,      n, singular, maskulin, opa).
-lex(grossvaeter,     n, plural,   maskulin, opa).
-lex(grosstante,      n, singular, feminin,  grosstante).
-lex(grosstanten,     n, plural,   feminin,  grosstante).
-lex(grossonkel,      n, singular, maskulin, grossonkel).
-lex(grossoenkel,     n, plural,   maskulin, grossonkel).
-lex(halbbruder,      n, singular, maskulin, halbbruder).
-lex(halbbrueder,     n, plural,   maskulin, halbbruder).
-lex(halbschwester,   n, singular, feminin,  halbschwester).
-lex(halbschwestern,  n, plural,   feminin,  halbschwester).
-lex(halbgeschwister, n, plural,   _,        halbgeschwister).
+lex(der, art, singular, maskulin, nominativ, artikel).
+lex(die, art, singular, feminin,  nominativ, artikel).
+lex(das, art, singular, neutrum,  nominativ, artikel).
+lex(dem, art, singular, maskulin, dativ,     artikel).
+lex(der, art, singular, feminin,  dativ,     artikel).
+lex(dem, art, singular, neutrum,  dativ,     artikel).
+
+%lex(verheiratet,     n, singular, _,        verheiratet).
+lex(kind,            n, singular, neutrum,  _, kind).
+lex(kinder,          n, plural,   feminin,  _, kind).
+lex(sohn,            n, singular, maskulin, _, sohn).
+lex(soehne,          n, plural,   feminin,  _, sohn).
+lex(tochter,         n, singular, feminin,  _, tochter).
+lex(toechter,        n, plural,   feminin,  _, tochter).
+lex(eltern,          n, plural,   feminin,  _, elter).
+lex(vater,           n, singular, maskulin, _, vater).
+lex(mutter,          n, singular, feminin,  _, mutter).
+lex(geschwister,     n, plural,   feminin,  _, geschwister).
+lex(bruder,          n, singular, maskulin, _, bruder).
+lex(brueder,         n, plural,   feminin,  _, bruder).
+lex(schwester,       n, singular, feminin,  _, schwester).
+lex(schwestern,      n, plural,   feminin,  _, schwester).
+lex(tante,           n, singular, feminin,  _, tante).
+lex(tanten,          n, plural,   feminin,  _, tante).
+lex(onkel,           n, singular, maskulin, _, onkel).
+lex(oenkel,          n, plural,   feminin,  _, onkel).
+lex(neffe,           n, singular, maskulin, _, neffe).
+lex(neffen,          n, singular, feminin,  _, neffe).
+lex(nichte,          n, singular, feminin,  _, nichte).
+lex(nichten,         n, plural,   feminin,  _, nichte).
+lex(cousin,          n, singular, maskulin, _, cousin).
+lex(cousins,         n, plural,   feminin,  _, cousin).
+lex(cousine,         n, singular, feminin,  _, cousine).
+lex(cousinen,        n, plural,   feminin,  _, cousine).
+lex(grosseltern,     n, plural,   feminin,  _, grosselter).
+lex(oma,             n, singular, feminin,  _, oma).
+lex(omas,            n, plural,   feminin,  _, oma).
+lex(grossmutter,     n, singular, feminin,  _, oma).
+lex(grossmuetter,    n, plural,   feminin,  _, oma).
+lex(opa,             n, singular, maskulin, _, opa).
+lex(opas,            n, plural,   feminin,  _, opa).
+lex(grossvater,      n, singular, maskulin, _, opa).
+lex(grossvaeter,     n, plural,   feminin,  _, opa).
+lex(grosstante,      n, singular, feminin,  _, grosstante).
+lex(grosstanten,     n, plural,   feminin,  _, grosstante).
+lex(grossonkel,      n, singular, maskulin, _, grossonkel).
+lex(grossoenkel,     n, plural,   feminin,  _, grossonkel).
+lex(halbbruder,      n, singular, maskulin, _, halbbruder).
+lex(halbbrueder,     n, plural,   feminin,  _, halbbruder).
+lex(halbschwester,   n, singular, feminin,  _, halbschwester).
+lex(halbschwestern,  n, plural,   feminin,  _, halbschwester).
+lex(halbgeschwister, n, plural,   feminin,  _, halbgeschwister).
