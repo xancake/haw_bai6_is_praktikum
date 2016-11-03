@@ -35,11 +35,12 @@ solve(Satz) :- solve(Satz, Antwort), !, write('Antwort: '), write_satz(Antwort),
 solve(_)    :- write('Antwort: Nein'), nl.
 
 solve(Satz, Antwort) :-
-        frage(Sem, Satz, []),
+        frage(Sem, Num, Satz, []),
         write('Semantik: '), write(Sem), nl,
+        write('Numerus: '), write(Num), nl,
         verarbeite(Sem, Ergebnis),
         write('Ergebnis: '), write(Ergebnis), nl,
-        antwort(Sem, Antwort, []).
+        antwort(Sem, Num, Antwort, []).
 
 verarbeite(EListe, AListe) :- atom(EListe), EListe=AListe.
 verarbeite(EListe, AListe) :- var(EListe),  EListe=AListe.

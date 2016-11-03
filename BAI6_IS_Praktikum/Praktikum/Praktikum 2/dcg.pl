@@ -1,9 +1,17 @@
 :- consult(lexicon).
 
-%% Satz
-frage(SemNP)   --> v(_, Num), np(SemEN, _, Sex, _), np(SemNP, Num, Sex, nominativ), {SemNP=[_,SemEN,_|_]}.
-frage(SemVP)   --> np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex), {SemVP=[_,SemNP,_|_]}.
-antwort(SemVP) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex).
+%% Fragen
+frage(Sem, Num) --> entscheidungsfrage(Sem, Num).
+frage(Sem, Num) --> ergaenzungsfrage(Sem, Num).
+frage(Sem, Num) --> bestaetigungsfrage(Sem, Num).
+
+entscheidungsfrage(SemNP2, Num) --> v(_, Num), np(SemNP1, _, Sex, _), np(SemNP2, Num, Sex, nominativ), {SemNP2=[_,SemNP1,_|_]}.
+entscheidungsfrage(SemNP1, Num) --> v(_, Num), np(SemNP1, _, Sex, _), np(SemNP2, Num, Sex, nominativ), {SemNP1=[_,SemNP2,_|_]}.
+ergaenzungsfrage(SemVP, Num)   --> ip(SemIP, _), vp(SemVP, Num, _), {SemVP=[_,SemIP,_|_]}.
+bestaetigungsfrage(SemVP, Num) --> en(SemEN, Num, Sex), vp(SemVP, Num, Sex), {SemVP=[_,SemEN,_|_]}.
+
+%% Antwort
+antwort(SemVP, Num) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex).
 
 %% Nominalphrasen
 np(SemEN, Num, Sex, _)     --> en(SemEN, Num, Sex).
