@@ -45,7 +45,7 @@ solve(Satz, Antwort) :-
 verarbeite(EListe, AListe) :- atom(EListe), EListe=AListe.
 verarbeite(EListe, AListe) :- var(EListe),  EListe=AListe.
 verarbeite(EListe, AListe) :-
-        not(var(EListe)),
+        length(EListe, 3),
         EListe = [Funktor|Rest1],
         Rest1  = [Arg1|Rest2],
         Rest2  = [Arg2],
