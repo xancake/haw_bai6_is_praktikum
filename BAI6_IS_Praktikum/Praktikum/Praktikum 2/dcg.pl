@@ -5,8 +5,8 @@ frage(Sem, Num) --> entscheidungsfrage(Sem, Num).
 frage(Sem, Num) --> ergaenzungsfrage(Sem, Num).
 frage(Sem, Num) --> bestaetigungsfrage(Sem, Num).
 
-entscheidungsfrage(SemNP2, Num) --> v(_, Num), np(SemNP1, _, Sex, _), np(SemNP2, Num, Sex, nominativ), {SemNP2=[_,SemNP1,_|_]}.
-entscheidungsfrage(SemNP1, Num) --> v(_, Num), np(SemNP1, _, Sex, _), np(SemNP2, Num, Sex, nominativ), {SemNP1=[_,SemNP2,_|_]}.
+entscheidungsfrage(SemNP2, Num) --> v(_, Num), np(SemNP1, _, Sex, _), np(SemNP2, Num, Sex, nominativ), {SemNP2=[_,SemNP1,_|_]}. %% ist X der Onkel von Y?
+entscheidungsfrage(SemNP1, Num) --> v(_, Num), np(SemNP1, _, Sex, _), np(SemNP2, Num, Sex, nominativ), {SemNP1=[_,SemNP2,_|_]}. %% ist der Onkel von Y X?
 ergaenzungsfrage(SemVP, Num)   --> ip(SemIP, _), vp(SemVP, Num, _), {SemVP=[_,SemIP,_|_]}.
 bestaetigungsfrage(SemVP, Num) --> en(SemEN, Num, Sex), vp(SemVP, Num, Sex), {SemVP=[_,SemEN,_|_]}.
 
@@ -17,7 +17,6 @@ antwort(SemVP, Num) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex, _), vp(SemVP,
 np(SemEN, Num, Sex, _)     --> en(SemEN, Num, Sex).
 np(SemN,  Num, Sex, Fall)  --> art(_, Num, Sex, Fall), n(SemN, Num, Sex, Fall).
 np(Sem,   Num, SexN, Fall) --> art(_, Num, SexN, Fall), n(SemN, Num, SexN, Fall), {append([SemN], SemPP, Sem)}, pp(SemPP, _, _).  % Das append muss vor dem pp, damit wir nicht endlos in die Tiefe laufen (weil pp -> np -> pp -> np -> ...)
-np(SemIP, Num, _, _)       --> ip(SemIP, Num).
 np(Sem,   Num, _, _)       --> en(SemEN1, _, _), k(_, Num), en(SemEN2, _, _), {Sem=[SemEN1, SemEN2]}.
 
 %% Präpositionalphrasen
