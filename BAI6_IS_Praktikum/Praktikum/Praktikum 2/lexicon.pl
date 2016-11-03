@@ -18,6 +18,7 @@ lex(das, art, singular, neutrum,  nominativ, artikel).
 lex(dem, art, singular, maskulin, dativ,     artikel).
 lex(der, art, singular, feminin,  dativ,     artikel).
 lex(dem, art, singular, neutrum,  dativ,     artikel).
+lex(die, art, plural,   feminin,  nominativ, artikel).
 
 %lex(verheiratet,     n, singular, _,        verheiratet).
 lex(kind,            n, singular, neutrum,  _, kind).
