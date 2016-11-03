@@ -20,7 +20,7 @@
 %% Der Antwortsatz hierfür müsste ungefähr so lauten:
 %%     [wer,sind,die,eltern,von,abel] --> [harald,und,luise,sind,die,eltern,von,abel] oder [die,elter,von,abel,sind,harald,und,luise]
 
-frage() :-
+main() :-
         write('Frage: '),
         read_sentence(Input),
         
@@ -29,7 +29,7 @@ frage() :-
         write(Satz), nl,
         
         solve(Satz), nl,
-        frage().
+        main().
 
 solve(Satz) :- solve(Satz, Antwort), !, write('Antwort: '), write_satz(Antwort), nl.
 solve(_)    :- write('Antwort: Nein'), nl.

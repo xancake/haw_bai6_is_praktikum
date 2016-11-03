@@ -1,9 +1,9 @@
 :- consult(lexicon).
 
 %% Satz
-s(SemNP)    --> v(_, Num), np(SemEN, _, Sex, _), np(SemNP, Num, Sex, nominativ), {SemNP=[_,SemEN,_|_]}.
-s(SemVP)    --> np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex), {SemVP=[_,SemNP,_|_]}.
-antw(SemVP) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex).
+frage(SemNP)   --> v(_, Num), np(SemEN, _, Sex, _), np(SemNP, Num, Sex, nominativ), {SemNP=[_,SemEN,_|_]}.
+frage(SemVP)   --> np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex), {SemVP=[_,SemNP,_|_]}.
+antwort(SemVP) --> {SemVP=[_,SemNP,_|_]}, np(SemNP, Num, Sex, _), vp(SemVP, Num, Sex).
 
 %% Nominalphrasen
 np(SemEN, Num, Sex, _)     --> en(SemEN, Num, Sex).
