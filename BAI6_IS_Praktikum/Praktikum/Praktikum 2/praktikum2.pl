@@ -42,18 +42,22 @@ solve(Satz, Antwort) :-
         write('Ergebnis: '), write(Ergebnis), nl,
         antwort(Sem, Num, Antwort, []).
 
-verarbeite(EListe, AListe) :- atom(EListe), EListe=AListe.
-verarbeite(EListe, AListe) :- var(EListe),  EListe=AListe.
 verarbeite(EListe, AListe) :-
-        length(EListe, 3),
-        EListe = [Funktor|Rest1],
-        Rest1  = [Arg1|Rest2],
-        Rest2  = [Arg2],
+        not(atom(EListe)), not(var(EListe)),
+        length(EListe, 3), %EListe=[E1,_], n(E1, _Num, _, _, _, []), % Bei einer drei-elementigen Liste mit einem Nomen vorne verarbeiten
+        EListe = [Funktor|[Arg1|[Arg2]]],
         verarbeite(Arg1, Erg1),
-        verarbeite(Arg2, Erg2),
-        Funktion =..[Funktor, Erg1, Erg2],
-        call(Funktion),
-        arg(1, Funktion, AListe).
+        verarbeite(Arg2, Erg2), !,
+        mycall(Funktor, Erg1, Erg2, AListe).
+verarbeite(EListe, EListe).
+
+%% Funktor(Arg1, Arg2) callen und das Ergebnis von Arg1 zurückgeben
+mycall(Funktor, Arg1, Arg2, Output) :- not(is_list(Arg1)), not(is_list(Arg2)), Funktion =..[Funktor, Arg1, Arg2], call(Funktion), arg(1, Funktion, Output).
+%% Wenn wir Listen haben (z.B. [elter, [harald, luise], abel], dann müssen wir elter(harald, abel) und elter(luise, abel) aufrufen
+mycall(_, _, [], []).
+mycall(_, [], _, []).
+mycall(Funktor, Arg1, Arg2, Output) :- not(is_list(Arg1)), is_list(Arg2), Arg2=[K|Rest], mycall(Funktor, Arg1, K, Out1), mycall(Funktor, Arg1, Rest, Out2), append([Out1], Out2, Output).
+mycall(Funktor, Arg1, Arg2, Output) :- is_list(Arg1), not(is_list(Arg2)), Arg1=[K|Rest], mycall(Funktor, K, Arg2, Out1), mycall(Funktor, Rest, Arg2, Out2), append([Out1], Out2, Output).
 
 write_satz([])       :- write('!').
 write_satz([K|Rest]) :- write(' '), write(K), write_satz(Rest).
