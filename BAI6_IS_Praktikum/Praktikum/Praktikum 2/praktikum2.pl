@@ -32,7 +32,7 @@ main() :-
         main().
 
 solve(Satz) :- solve(Satz, Antwort), !, write('Antwort: '), write_satz(Antwort), nl.
-solve(_)    :- write('Antwort: Nein'), nl.
+solve(_)    :- nl, write('Antwort: Nein'), nl.
 
 solve(Satz, Antwort) :-
         frage(Sem, Num, Satz, []), !,
