@@ -56,19 +56,17 @@ state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State
 % Es ist sichergestellt, dass die beiden ersten Klauseln nicht zutreffen.
 state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
-
 eval_path([(_,State,Value)|RestPath]) :-
-  eval_state(State,"Rest des Literals bzw. der Klausel"
-  "Value berechnen".
+  eval_state(State,StateValue),
+  length(RestPath,PathLength),
+  Value is StateValue+PathLength.
 eval_state(State, Value) :-
   goal_description(GoalState),
-  append(State, GoalState, Temp),
-  list_to_set(Temp, TempSet),
-  length(TempSet, TempValue),
-  length(GoalState, GoalValue),
-  Value is GoalValue - TempValue.
+  intersection(State, GoalState, Intersection), % Schnittmenge berechnen
+  length(Intersection, EqualStateCount),
+  length(GoalState, GoalStateCount),
+  Value is GoalStateCount-EqualStateCount.
 
-  
 %action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
 action(pick_up(X),      [handempty, clear(X), on(table,X)],       [handempty, clear(X), on(table,X)], [holding(X)]).
 action(pick_up(X),      [handempty, clear(X), on(Y,X), block(Y)], [handempty, clear(X), on(Y,X)],     [holding(X), clear(Y)]).
