@@ -2,9 +2,7 @@
 
 %% Lexikon
 lex(von,    p,  _,         von).
-%lex(vom,    p,  _,         von).
 lex(wer,    ip, _,        _Wer).
-%lex(wessen, ip, _,        _Wer).
 lex(ist,    v,  singular,  ist).
 lex(sind,   v,  plural,    ist).
 lex(und,    k,  plural,    und).

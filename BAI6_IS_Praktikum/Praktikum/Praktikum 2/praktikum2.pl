@@ -45,8 +45,9 @@ solve(Satz, Antwort) :-
 
 verarbeite(EListe, Num, AListe) :-
         not(atom(EListe)), not(var(EListe)),
-        length(EListe, 3), %EListe=[E1,_], n(E1, _Num, _, _, _, []), % Bei einer drei-elementigen Liste mit einem Nomen vorne verarbeiten
+        length(EListe, 3),
         EListe = [Funktor|[Arg1|[Arg2]]],
+        n(Funktor, _, _, _, _, []), % Bei einer drei-elementigen Liste mit einem Nomen vorne verarbeiten
         verarbeite(Arg1, Num, Erg1),
         verarbeite(Arg2, Num, Erg2), !,
         mycall(Funktor, Erg1, Erg2, Num, AListe).
