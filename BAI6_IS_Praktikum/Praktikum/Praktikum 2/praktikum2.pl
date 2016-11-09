@@ -24,7 +24,7 @@ main() :-
         write('Frage: '),
         read_sentence(Input),
         
-        write(Input), write(' ==> '),
+        write("Input: "), write(Input), write(' ==> '),
         append(Satz, ['?'], Input),
         write(Satz), nl,
         
@@ -35,29 +35,32 @@ solve(Satz) :- solve(Satz, Antwort), !, write('Antwort: '), write_satz(Antwort),
 solve(_)    :- write('Antwort: Nein'), nl.
 
 solve(Satz, Antwort) :-
-        frage(Sem, Num, Satz, []),
-        write('Semantik: '), write(Sem), nl,
+        frage(Sem, Num, Satz, []), !,
         write('Numerus: '), write(Num), nl,
-        verarbeite(Sem, Ergebnis),
+        write('Semantik: '), write(Sem),
+        verarbeite(Sem, Num, Ergebnis), !,
+        write(' ==> Semantik: '), write(Sem), nl,
         write('Ergebnis: '), write(Ergebnis), nl,
         antwort(Sem, Num, Antwort, []).
 
-verarbeite(EListe, AListe) :-
+verarbeite(EListe, Num, AListe) :-
         not(atom(EListe)), not(var(EListe)),
         length(EListe, 3), %EListe=[E1,_], n(E1, _Num, _, _, _, []), % Bei einer drei-elementigen Liste mit einem Nomen vorne verarbeiten
         EListe = [Funktor|[Arg1|[Arg2]]],
-        verarbeite(Arg1, Erg1),
-        verarbeite(Arg2, Erg2), !,
-        mycall(Funktor, Erg1, Erg2, AListe).
-verarbeite(EListe, EListe).
+        verarbeite(Arg1, Num, Erg1),
+        verarbeite(Arg2, Num, Erg2), !,
+        mycall(Funktor, Erg1, Erg2, Num, AListe).
+verarbeite(EListe, _, EListe).
 
 %% Funktor(Arg1, Arg2) callen und das Ergebnis von Arg1 zurückgeben
-mycall(Funktor, Arg1, Arg2, Output) :- not(is_list(Arg1)), not(is_list(Arg2)), Funktion =..[Funktor, Arg1, Arg2], call(Funktion), arg(1, Funktion, Output).
+mycall(Funktor, Arg1, Arg2, singular, Output) :- not(is_list(Arg1)), not(is_list(Arg2)), Funktion =..[Funktor, Arg1, Arg2], call(Funktion), arg(1, Funktion, Output).
+mycall(Funktor, Arg1, Arg2, plural,   Output) :- not(is_list(Arg1)), not(is_list(Arg2)), Funktion =..[Funktor, Arg1, Arg2], findall(Arg1, call(Funktion), Output), Funktion=..[Funktor, Output, Arg2].
+mycall(Funktor, Arg1, Arg2, plural,   Output) :- not(is_list(Arg1)), not(is_list(Arg2)), F1=..[Funktor, Arg1, Arg2], call(F1), F2=..[Funktor, Arg2, Arg1], call(F2), arg(1, F1, X), arg(1, F2, Y), Output=[X, Y].
 %% Wenn wir Listen haben (z.B. [elter, [harald, luise], abel], dann müssen wir elter(harald, abel) und elter(luise, abel) aufrufen
-mycall(_, _, [], []).
-mycall(_, [], _, []).
-mycall(Funktor, Arg1, Arg2, Output) :- not(is_list(Arg1)), is_list(Arg2), Arg2=[K|Rest], mycall(Funktor, Arg1, K, Out1), mycall(Funktor, Arg1, Rest, Out2), append([Out1], Out2, Output).
-mycall(Funktor, Arg1, Arg2, Output) :- is_list(Arg1), not(is_list(Arg2)), Arg1=[K|Rest], mycall(Funktor, K, Arg2, Out1), mycall(Funktor, Rest, Arg2, Out2), append([Out1], Out2, Output).
+mycall(_, _, [], _, []).
+mycall(_, [], _, _, []).
+mycall(Funktor, Arg1, Arg2, Num, Output) :- not(is_list(Arg1)), is_list(Arg2), Arg2=[K|Rest], mycall(Funktor, Arg1, K, singular, Out1), mycall(Funktor, Arg1, Rest, Num, Out2), append([Out1], Out2, Output).
+mycall(Funktor, Arg1, Arg2, Num, Output) :- is_list(Arg1), not(is_list(Arg2)), Arg1=[K|Rest], mycall(Funktor, K, Arg2, singular, Out1), mycall(Funktor, Rest, Arg2, Num, Out2), append([Out1], Out2, Output).
 
 write_satz([])       :- write('!').
 write_satz([K|Rest]) :- write(' '), write(K), write_satz(Rest).
