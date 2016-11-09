@@ -57,15 +57,16 @@ state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State
 state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 eval_path([(_,State,Value)|RestPath]) :-
-  eval_state(State,StateValue),
-  length(RestPath,PathLength),
-  Value is StateValue+PathLength.
+  %eval_state(State, StateValue),
+  %length(RestPath, PathLength),
+  %Value is StateValue + PathLength.
+  eval_state(State, Value).
 eval_state(State, Value) :-
   goal_description(GoalState),
   intersection(State, GoalState, Intersection), % Schnittmenge berechnen
   length(Intersection, EqualStateCount),
   length(GoalState, GoalStateCount),
-  Value is GoalStateCount-EqualStateCount.
+  Value is GoalStateCount - EqualStateCount.
 
 %action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
 action(pick_up(X),      [handempty, clear(X), on(table,X)],       [handempty, clear(X), on(table,X)], [holding(X)]).
