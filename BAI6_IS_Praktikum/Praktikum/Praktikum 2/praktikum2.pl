@@ -43,15 +43,15 @@ solve(Satz, Antwort) :-
         write('Ergebnis: '), write(Ergebnis), nl,
         antwort(Sem, Num, Antwort, []).
 
-verarbeite(EListe, Num, AListe) :-
-        not(atom(EListe)), not(var(EListe)),
-        length(EListe, 3),
-        EListe = [Funktor|[Arg1|[Arg2]]],
+verarbeite(Sem, Num, Ergebnis) :-
+        not(atom(Sem)), not(var(Sem)),
+        length(Sem, 3),
+        Sem = [Funktor|[Arg1|[Arg2]]],
         n(Funktor, _, _, _, _, []), % Bei einer drei-elementigen Liste mit einem Nomen vorne verarbeiten
         verarbeite(Arg1, Num, Erg1),
         verarbeite(Arg2, Num, Erg2), !,
-        mycall(Funktor, Erg1, Erg2, Num, AListe).
-verarbeite(EListe, _, EListe).
+        mycall(Funktor, Erg1, Erg2, Num, Ergebnis).
+verarbeite(Sem, _, Sem).
 
 %% Funktor(Arg1, Arg2) callen und das Ergebnis von Arg1 zurückgeben
 mycall(Funktor, Arg1, Arg2, singular, Output) :- not(is_list(Arg1)), not(is_list(Arg2)), Funktion =..[Funktor, Arg1, Arg2], call(Funktion), arg(1, Funktion, Output).

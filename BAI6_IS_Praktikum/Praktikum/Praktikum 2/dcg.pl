@@ -1,9 +1,9 @@
 :- consult(lexicon).
 
 %% Sätze
-frage(SemNP2, Num) --> vp(_,     Num, _), np(SemNP1, Num, Sex, nominativ), np(SemNP2, _,   Sex, nominativ), {SemNP2=[_,SemNP1,_|_]}. % Entscheidungsfrage: ist X der Onkel von Y?
-frage(SemNP1, Num) --> vp(_,     Num, _), np(SemNP1, Num, Sex, nominativ), np(SemNP2, _,   Sex, nominativ), {SemNP1=[_,SemNP2,_|_]}. % Entscheidungsfrage: ist der Onkel von Y X?
-frage(Sem,    Num) --> vp(SemVP, Num, _), np(SemNP,  Num, _,   nominativ), {append([SemNP], SemVP, Sem)}.                            % Entscheidungsfrage: sind X und Y geschwister?
+frage(SemNP2, Num) --> v(_, Num), np(SemNP1, Num, Sex, nominativ), np(SemNP2, _, Sex, nominativ), {SemNP2=[_,SemNP1,_|_]}. % Entscheidungsfrage: ist X der Onkel von Y? / sind X und Y die Eltern von Z?
+frage(SemNP1, Num) --> v(_, Num), np(SemNP1, Num, Sex, nominativ), np(SemNP2, _, Sex, nominativ), {SemNP1=[_,SemNP2,_|_]}. % Entscheidungsfrage: ist der Onkel von Y X? / sind die Eltern von Z X und Y?
+frage(Sem,    Num) --> v(_, Num), np(SemNP1, Num, _, nominativ), np(SemNP2, Num, _, nominativ), {append([SemNP2], SemNP1, Sem)}. % Entscheidungsfrage: sind X und Y geschwister?
 frage(SemVP,  Num) --> np(SemNP, Num, Sex, nominativ), vp(SemVP, Num, Sex), {SemVP=[_,SemNP,_|_]}. % Ergänzungsfrage: wer ist der Onkel von X? & Bestätigungsfrage: X ist der Onkel von Y?
 frage(SemNP,  Num) --> np(SemNP, Num, Sex, nominativ), vp(SemVP, Num, Sex), {SemNP=[_,SemVP,_|_]}. % Bestätigungsfrage: der Onkel von Y ist X?
 
