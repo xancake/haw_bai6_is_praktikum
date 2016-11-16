@@ -54,3 +54,12 @@ Action: pick_up(block3)
 Action: put_on_table(block3)
 Action: pick_up(block2)
 Action: put_on(block4,block2)
+
+
+// Kleiner Zustandsraum
+informed	h2	% 35,988 inferences, 0.031 CPU in 1.514 seconds (2% CPU, 1151616 Lips)
+astar		h2	% 56,801 inferences, 0.016 CPU in 2.156 seconds (1% CPU, 3635264 Lips)
+
+// Groﬂer Zustandsraum
+informed	h1	% 107,101,992 inferences, 19.953 CPU in 115.690 seconds (17% CPU, 5367680 Lips) | ERROR: Out of global stack
+astar		h1	% 1,053,555 inferences, 0.172 CPU in 7.801 seconds (2% CPU, 6129775 Lips)
