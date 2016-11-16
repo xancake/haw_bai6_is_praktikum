@@ -133,7 +133,7 @@ state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 eval_path(heuristikOhnePfadkosten, [(_,State,Value)|_])        :- eval_state(State, Value).
 eval_path(heuristikMitPfadkosten,  [(_,State,Value)|RestPath]) :- eval_state(State, StateValue), length(RestPath, PathLength), Value is StateValue + PathLength.
-%/*
+/*
 % Anzahl überschneidender Zustände
 eval_state(State, Value) :-
   goal_description(GoalState),
@@ -141,8 +141,8 @@ eval_state(State, Value) :-
   length(Intersection, EqualStateCount),
   length(GoalState, GoalStateCount),
   Value is GoalStateCount - EqualStateCount.
-%*/
-/*
+*/
+%/*
 % Anzahl der Blöcke auf allen Blöcken die im Zielzustand frei sein sollen
 eval_state(State, Value) :-
   goal_description(GoalState),
@@ -155,7 +155,7 @@ sum_blocks_over_blocks([K|R], State, Count) :- count_blocks_over_block(K, State,
 count_blocks_over_block(Block, State, Count) :- member(holding(Block), State), Count is 0. % Spezialfall, wenn der Block gerade in der Hand ist
 count_blocks_over_block(Block, State, Count) :- member(clear(Block), State), Count is 0.
 count_blocks_over_block(Block, State, Count) :- member(on(Block, X), State), count_blocks_over_block(X, State, XCount), Count is XCount+1.
-*/
+%*/
 
 %action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
 action(pick_up(X),      [handempty, clear(X), on(table,X)],       [handempty, clear(X), on(table,X)], [holding(X)]).

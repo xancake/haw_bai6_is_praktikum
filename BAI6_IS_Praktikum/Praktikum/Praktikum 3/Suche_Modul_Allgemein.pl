@@ -32,6 +32,9 @@ search([[FirstNode|Predecessors]|_],_,[FirstNode|Predecessors]) :-
   goal_node(FirstNode),
   nl,write('SUCCESS'),nl,!.
 
+
+%search([[FirstNode|Predecessors]|RestPaths],iterativeDeepening,Solution) :- .
+
 search([[FirstNode|Predecessors]|RestPaths],Strategy,Solution) :- 
   expand(FirstNode,Children),                                    % Nachfolge-Zustände berechnen
   generate_new_paths(Children,[FirstNode|Predecessors],NewPaths), % Nachfolge-Zustände einbauen 
@@ -118,6 +121,13 @@ insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,AllPaths):-
 insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],SortedNewPaths),
+  append(SortedNewPaths,OldPaths,AllPaths),
+  write_action(AllPaths),
+  write_state(AllPaths).
+
+% Iterative Tiefensuche
+insert_new_paths(iterativeDeepening,NewPaths,OldPaths,AllPaths):-
+%funktion(Iterativen,NewPaths,OldPaths,AllPaths)
   append(SortedNewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
