@@ -88,22 +88,30 @@ insert_new_paths(breadth,NewPaths,OldPaths,AllPaths):-
 
 % Informierte Suche
 insert_new_paths(informed,NewPaths,OldPaths,AllPaths):-
-  eval_paths(heuristikOhnePfadkosten, NewPaths),
+  eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
-% Informierte Suche
+% A* Suche
 insert_new_paths(astar,NewPaths,OldPaths,AllPaths):-
-  eval_paths(heuristikMitPfadkosten, NewPaths),
+  eval_paths(mitPfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
-% Hill Climbing
-insert_new_paths(hillClimbing,NewPaths,_OldPaths,AllPaths):-
-  eval_paths(heuristikOhnePfadkosten, NewPaths),
+% optimistic Hill Climbing
+insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,AllPaths):-
+  eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],AllPaths),
+  write_action(AllPaths),
+  write_state(AllPaths).
+  
+% Hill Climbing with backtracking
+insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
+  eval_paths(ohnePfadkosten, NewPaths),
+  insert_new_paths_informed(NewPaths,[],SortedNewPaths),
+  append(SortedNewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
