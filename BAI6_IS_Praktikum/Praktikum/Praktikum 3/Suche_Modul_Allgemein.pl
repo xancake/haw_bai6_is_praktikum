@@ -100,18 +100,24 @@ insert_new_paths(astar,NewPaths,OldPaths,AllPaths):-
   write_action(AllPaths),
   write_state(AllPaths).
 
-% optimistic Hill Climbing
+% gierige Bestensuche
+insert_new_paths(bestFirst,NewPaths,OldPaths,AllPaths):-
+  eval_paths(ohnePfadkosten, NewPaths),
+  insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
+  write_action(AllPaths),
+  write_state(AllPaths).
+
+% optimistisches Bergsteigen
 insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
   
-% Hill Climbing with backtracking
+% Bergsteigen mit Backtracking
 insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],SortedNewPaths),
   append(SortedNewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
-
