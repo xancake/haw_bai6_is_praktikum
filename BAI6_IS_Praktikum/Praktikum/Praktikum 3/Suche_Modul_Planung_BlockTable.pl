@@ -31,7 +31,7 @@ goal_description([
 ]).
 */
 
-%/*
+/*
 %Komplexerer Start- und Zielzustand
 start_description([
   block(block1),
@@ -80,9 +80,9 @@ goal_description([
   clear(block4),
   handempty
 ]).
-%*/
+*/
 
-/*
+%/*
 % Standard Start- und Zielzustand (aus Aufgabenstellung)
 start_description([
   block(block1),
@@ -113,7 +113,7 @@ goal_description([
   clear(block2),
   handempty
 ]).
-*/
+%*/
 
 
 
@@ -131,8 +131,8 @@ state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State
 state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 
-eval_path(heuristik, [(_,State,Value)|_]) :- eval_state(State, Value).
-eval_path(heuristikMitPfadkosten, [(_,State,Value)|RestPath]) :- eval_state(State, StateValue), length(RestPath, PathLength), Value is StateValue + PathLength.
+eval_path(heuristikOhnePfadkosten, [(_,State,Value)|_])        :- eval_state(State, Value).
+eval_path(heuristikMitPfadkosten,  [(_,State,Value)|RestPath]) :- eval_state(State, StateValue), length(RestPath, PathLength), Value is StateValue + PathLength.
 %/*
 % Anzahl überschneidender Zustände
 eval_state(State, Value) :-

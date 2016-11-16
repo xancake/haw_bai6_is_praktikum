@@ -87,9 +87,23 @@ insert_new_paths(breadth,NewPaths,OldPaths,AllPaths):-
   write_action(AllPaths).
 
 % Informierte Suche
-insert_new_paths(Strategy,NewPaths,OldPaths,AllPaths):-
-  eval_paths(Strategy, NewPaths),
+insert_new_paths(informed,NewPaths,OldPaths,AllPaths):-
+  eval_paths(heuristikOhnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
+  write_action(AllPaths),
+  write_state(AllPaths).
+
+% Informierte Suche
+insert_new_paths(astar,NewPaths,OldPaths,AllPaths):-
+  eval_paths(heuristikMitPfadkosten, NewPaths),
+  insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
+  write_action(AllPaths),
+  write_state(AllPaths).
+
+% Hill Climbing
+insert_new_paths(hillClimbing,NewPaths,_OldPaths,AllPaths):-
+  eval_paths(heuristikOhnePfadkosten, NewPaths),
+  insert_new_paths_informed(NewPaths,[],AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
