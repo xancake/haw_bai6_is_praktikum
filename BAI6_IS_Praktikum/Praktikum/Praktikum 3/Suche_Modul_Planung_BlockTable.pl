@@ -10,6 +10,80 @@
 %   expand              ;Berechnung der Kind-Zustandsbeschreibungen
 %   eval-path           ;Bewertung eines Pfades
 
+/*
+% Einfacher unvollständiger Zielzustand
+start_description([
+  block(block1),
+  block(block2),
+  block(block3),
+  on(table,block1),
+  on(block1,block2),
+  on(table,block3),
+  clear(block2),
+  clear(block3),
+  handempty
+]).
+
+goal_description([
+  block(block1),
+  block(block2),
+  on(table,block2)
+]).
+*/
+
+/*
+%Komplexerer Start- und Zielzustand
+start_description([
+  block(block1),
+  block(block2),
+  block(block3),
+  block(block4),
+  block(block5),
+  block(block6),
+  block(block7),
+  block(block8),
+  block(block9),
+  on(table,block1),
+  on(table,block4),
+  on(table,block7),
+  on(block1,block2),
+  on(block2,block3),
+  on(block4,block5),
+  on(block5,block6),
+  on(block7,block8),
+  on(block8,block9),
+  clear(block6),
+  clear(block3),
+  clear(block9),
+  handempty
+]).
+
+goal_description([
+  block(block1),
+  block(block2),
+  block(block3),
+  block(block4),
+  block(block5),
+  block(block6),
+  block(block7),
+  block(block8),
+  block(block9),
+  on(table,block3),
+  on(table,block6),
+  on(table,block1),
+  on(table,block5),
+  on(block3,block2),
+  on(block6,block4),
+  clear(block2),
+  clear(block5),
+  clear(block1),
+  clear(block4),
+  handempty
+]).
+*/
+
+%/*
+% Standard Start- und Zielzustand (aus Aufgabenstellung)
 start_description([
   block(block1),
   block(block2),
@@ -39,12 +113,12 @@ goal_description([
   clear(block2),
   handempty
 ]).
-
+%*/
 
 
 
 start_node((start,_,_)).
-goal_node((_,State,_)) :- goal_description(GoalState), subtract(State, GoalState, []).
+goal_node((_,State,_)) :- goal_description(GoalState), subset(GoalState, State).
 
 
 % Aufgrund der Komplexität der Zustandsbeschreibungen kann state_member nicht auf 
@@ -56,6 +130,8 @@ state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State
 % Es ist sichergestellt, dass die beiden ersten Klauseln nicht zutreffen.
 state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
+/*
+% Anzahl überschneidender Zustände
 eval_path([(_,State,Value)|RestPath]) :-
   %eval_state(State, StateValue),
   %length(RestPath, PathLength),
@@ -67,6 +143,23 @@ eval_state(State, Value) :-
   length(Intersection, EqualStateCount),
   length(GoalState, GoalStateCount),
   Value is GoalStateCount - EqualStateCount.
+*/
+
+%/*
+% Anzahl der Blöcke auf allen Blöcken die im Zielzustand frei sein sollen
+eval_path([(_,State,Value)|RestPath]) :- eval_state(State, Value).
+eval_state(State, Value) :-
+  goal_description(GoalState),
+  findall(X, member(clear(X), GoalState), ClearBlocks),
+  write(ClearBlocks), write(" "),
+  sum_blocks_over_blocks(ClearBlocks, State, Value),
+  write(Value), nl.
+sum_blocks_over_blocks([],    _,     0).
+sum_blocks_over_blocks([K|R], State, Count) :- count_blocks_over_block(K, State, Value), sum_blocks_over_blocks(R, State, Sum), Count is Value+Sum.
+count_blocks_over_block(Block, State, Count) :- member(holding(Block), State), Count is 0. % Spezialfall, wenn der Block gerade in der Hand ist
+count_blocks_over_block(Block, State, Count) :- member(clear(Block), State), Count is 0.
+count_blocks_over_block(Block, State, Count) :- member(on(Block, X), State), count_blocks_over_block(X, State, XCount), Count is XCount+1.
+%*/
 
 %action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
 action(pick_up(X),      [handempty, clear(X), on(table,X)],       [handempty, clear(X), on(table,X)], [holding(X)]).
