@@ -29,17 +29,40 @@ write_actions([(Action,_,_)|Rest]):-
 % Abbruchbedingung: Wenn ein Zielzustand erreicht ist, wird der aktuelle Pfad an den
 % dritten Parameter übertragen.
 search([[FirstNode|Predecessors]|_],_,[FirstNode|Predecessors]) :- 
-  goal_node(FirstNode),
-  nl,write('SUCCESS'),nl,!.
+        goal_node(FirstNode),
+        nl,write('SUCCESS'),nl,!.
+  
+search(Paths,iterativeDeepening,Solution) :-
+        searchIterativeDeepening(Paths, Solution, 1).
+        
+search([[FirstNode|Predecessors]|RestPaths],Strategy,Solution) :-
+        expand(FirstNode,Children),                                     % Nachfolge-Zustände berechnen
+        generate_new_paths(Children,[FirstNode|Predecessors],NewPaths), % Nachfolge-Zustände einbauen
+        insert_new_paths(Strategy,NewPaths,RestPaths,AllPaths),         % Neue Pfade einsortieren
+        search(AllPaths,Strategy,Solution).
 
+% Realisiert die iterative Vertiefung, indem das Bound iterativ inkrementiert wird.
+searchIterativeDeepening(Paths,Solution,Bound) :-
+        write_bound(Bound),
+        setdepth(Paths),
+        searchIterativeDeepeningHelper(Paths,Solution,Bound).
+searchIterativeDeepening(Paths,Solution,Bound) :-
+        NewBound is Bound+1,
+        searchIterativeDeepening(Paths,Solution,NewBound).
 
-%search([[FirstNode|Predecessors]|RestPaths],iterativeDeepening,Solution) :- .
-
-search([[FirstNode|Predecessors]|RestPaths],Strategy,Solution) :- 
-  expand(FirstNode,Children),                                    % Nachfolge-Zustände berechnen
-  generate_new_paths(Children,[FirstNode|Predecessors],NewPaths), % Nachfolge-Zustände einbauen 
-  insert_new_paths(Strategy,NewPaths,RestPaths,AllPaths),        % Neue Pfade einsortieren
-  search(AllPaths,Strategy,Solution).
+% Setzt den Zielabgleich und das konkrete Suchen um (Durchlauf bis Bound)
+searchIterativeDeepeningHelper([[FirstNode|Predecessors]|_],[FirstNode|Predecessors],_) :-
+        goal_node(FirstNode),
+        nl, write('SUCCESS'), nl, !.
+searchIterativeDeepeningHelper([[(_,_,Bound)|_]|RestPaths],Solution,Bound) :-
+        searchIterativeDeepeningHelper(RestPaths,Solution,Bound).
+searchIterativeDeepeningHelper([[FirstNode|Predecessors]|RestPaths],Solution,Bound) :-
+        FirstNode = (_,_,Depth), Depth < Bound,
+        write_depth(Depth, Bound),
+        expand(FirstNode,Children),                                       % Nachfolge-Zustände berechnen
+        generate_new_paths(Children,[FirstNode|Predecessors],NewPaths),   % Nachfolge-Zustände einbauen
+        insert_new_paths(iterativeDeepening,NewPaths,RestPaths,AllPaths), % Neue Pfade einsortieren
+        searchIterativeDeepeningHelper(AllPaths,Solution,Bound).
 
 
 generate_new_paths(Children,Path,NewPaths):-
@@ -67,12 +90,13 @@ get_state((_,State,_),State).
 
 
 %%% Strategie:
-write_action([[(Action,_)|_]|_])      :- nl,write('Action: '),write(Action),nl.
-write_next_state([[_,(_,State)|_]|_]) :- nl,write('Go on with: '),write(State),nl.
-write_state([[(_,State)|_]|_])        :- write('New State: '),write(State),nl.
-write_fail(depth,[[(_,State)|_]|_])   :- nl,write('FAIL, go on with: '),write(State),nl.
-write_fail(_,_)                       :- nl,write('FAIL').
-
+write_action([[(Action,_)|_]|_])      .%:- nl,write('Action: '),write(Action),nl.
+write_next_state([[_,(_,State)|_]|_]) .%:- nl,write('Go on with: '),write(State),nl.
+write_state([[(_,State)|_]|_])        .%:- write('New State: '),write(State),nl.
+write_fail(depth,[[(_,State)|_]|_])   .%:- nl,write('FAIL, go on with: '),write(State),nl.
+write_fail(_,_)                       .%:- nl,write('FAIL').
+write_bound(Bound)                    .%:- write('=== Bound: '), write(Bound), nl.
+write_depth(Depth, Bound)             .%:- write('===== Depth: '), write(Depth), write('/'), write(Bound), nl.
 
 % Alle Strategien: Keine neuen Pfade vorhanden
 insert_new_paths(Strategy,[],OldPaths,OldPaths):-
@@ -127,7 +151,11 @@ insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
 
 % Iterative Tiefensuche
 insert_new_paths(iterativeDeepening,NewPaths,OldPaths,AllPaths):-
-%funktion(Iterativen,NewPaths,OldPaths,AllPaths)
-  append(SortedNewPaths,OldPaths,AllPaths),
-  write_action(AllPaths),
+  setdepth(NewPaths),
+  insert_new_paths(depth,NewPaths,OldPaths,AllPaths),
   write_state(AllPaths).
+  
+% Nutzt das Value-Feld der Knoten um dort die Tiefe abzulegen, in der sich der Knoten im Suchbaum befindet
+setdepth([]).
+setdepth([K|R]) :- setdepthHelper(K),setdepth(R).
+setdepthHelper([(_,_,Value)|R]) :- length(R, Value).
