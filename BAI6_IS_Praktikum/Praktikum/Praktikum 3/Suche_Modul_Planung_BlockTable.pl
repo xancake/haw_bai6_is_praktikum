@@ -29,9 +29,17 @@ goal_description([
   block(block2),
   on(table,block2)
 ]).
+goal_description([
+  block(block1),
+  block(block2),
+  block(block3),
+  on(table,block2),
+  on(block2,_),
+  clear(block3)
+]).
 */
 
-%/*
+/*
 %Komplexerer Start- und Zielzustand
 start_description([
   block(block1),
@@ -80,9 +88,9 @@ goal_description([
   clear(block4),
   handempty
 ]).
-%*/
+*/
 
-/*
+%/*
 % Standard Start- und Zielzustand (aus Aufgabenstellung)
 start_description([
   block(block1),
@@ -113,7 +121,7 @@ goal_description([
   clear(block2),
   handempty
 ]).
-*/
+%*/
 
 
 
@@ -148,7 +156,7 @@ eval_state(State, Value) :-
   goal_description(GoalState),
   findall(X, member(clear(X), GoalState), ClearBlocks),
   %write(ClearBlocks), write(" "), write(State), write(" "),
-  sum_blocks_over_blocks(ClearBlocks, State, Value),
+  sum_blocks_over_blocks(ClearBlocks, State, Value).
   %write(Value), nl.
 sum_blocks_over_blocks([],    _,     0).
 sum_blocks_over_blocks([K|R], State, Count) :- count_blocks_over_block(K, State, Value), sum_blocks_over_blocks(R, State, Sum), Count is Value+Sum.
