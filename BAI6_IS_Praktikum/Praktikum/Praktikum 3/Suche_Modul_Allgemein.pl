@@ -157,11 +157,13 @@ insert_new_paths(bestFirst,NewPaths,OldPaths,AllPaths):-
  * Verwerfen der alten Pfade, es wird immer der nach der heuristik am besten
  * bewertete Knoten verfolgt. Dadurch nicht vollständig.
  */
-insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,AllPaths):-
+insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,[NewPath]):-
   eval_paths(ohnePfadkosten, NewPaths),
-  insert_new_paths_informed(NewPaths,[],AllPaths),
-  write_action(AllPaths),
-  write_state(AllPaths).
+  insert_new_paths_informed(NewPaths,[],[NewPath|_]),
+  NewPath = [(_,_,V1),(_,_,V2)|_],
+  V1 >= V2,
+  write_action([NewPath]),
+  write_state([NewPath]).
   
 /**
  * Bergsteigen mit Backtracking
