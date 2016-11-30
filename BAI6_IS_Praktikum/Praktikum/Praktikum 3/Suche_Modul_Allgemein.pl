@@ -31,17 +31,23 @@ write_actions([(Action,_,_)|Rest]):-
 search([[FirstNode|Predecessors]|_],_,[FirstNode|Predecessors]) :- 
         goal_node(FirstNode),
         nl,write('SUCCESS'),nl,!.
-  
+        
+% Einstiegspunkt für die iterative Tiefensuche
 search(Paths,iterativeDeepening,Solution) :-
         searchIterativeDeepening(Paths, Solution, 1).
-        
+
+% Standard Einstieg für alle anderen Suchalgorithmen
 search([[FirstNode|Predecessors]|RestPaths],Strategy,Solution) :-
         expand(FirstNode,Children),                                     % Nachfolge-Zustände berechnen
         generate_new_paths(Children,[FirstNode|Predecessors],NewPaths), % Nachfolge-Zustände einbauen
         insert_new_paths(Strategy,NewPaths,RestPaths,AllPaths),         % Neue Pfade einsortieren
         search(AllPaths,Strategy,Solution).
 
-% Realisiert die iterative Vertiefung, indem das Bound iterativ inkrementiert wird.
+/**
+ * Realisiert die iterative Vertiefung, indem das Bound iterativ inkrementiert wird.
+ * Im ersten Block wird die Suche für das aktuelle Bound umgesetzt und im zweiten inkrementiert
+ * und wieder aufgerufen, wenn im Ersten kein Zielzustand gefunden wurde.
+ */
 searchIterativeDeepening(Paths,Solution,Bound) :-
         write_bound(Bound),
         setdepth(Paths),
@@ -50,7 +56,13 @@ searchIterativeDeepening(Paths,Solution,Bound) :-
         NewBound is Bound+1,
         searchIterativeDeepening(Paths,Solution,NewBound).
 
-% Setzt den Zielabgleich und das konkrete Suchen um (Durchlauf bis Bound)
+/**
+ * Realisiert den Zielabgleich und das konkrete Suchen (Durchlauf bis Bound)
+ * Erste Block:   Abbruchbedingung, für Zustand ist Zielzustand
+ * Zweiter Block: Abbruchbedingung für Knoten deren Tiefe dem Bound entsprechen und dann
+ *                wird der Knoten verworfen und der Restpfad des Baumes abgearbeitet
+ * Dritter Block: Konkrete Suche (vgl. Standardsuche)
+ */
 searchIterativeDeepeningHelper([[FirstNode|Predecessors]|_],[FirstNode|Predecessors],_) :-
         goal_node(FirstNode),
         nl, write('SUCCESS'), nl, !.
@@ -120,28 +132,41 @@ insert_new_paths(informed,NewPaths,OldPaths,AllPaths):-
   write_action(AllPaths),
   write_state(AllPaths).
 
-% A* Suche
+/**
+ * A* Suche
+ * Sortiert alle Pfade im Suchpfad nach der Heuristik und verwendet dafür auch die Pfadkosten
+ */
 insert_new_paths(astar,NewPaths,OldPaths,AllPaths):-
   eval_paths(mitPfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
-% gierige Bestensuche
+/**
+ * gierige Bestensuche
+ * Sortiert alle Pfade im Suchpfad nach der Heuristik und verwendet dabei keine Pfadkosten
+ */
 insert_new_paths(bestFirst,NewPaths,OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
-% optimistisches Bergsteigen
+/**
+ * Optimistisches Bergsteigen
+ * Verwerfen der alten Pfade, es wird immer der nach der heuristik am besten
+ * bewertete Knoten verfolgt. Dadurch nicht vollständig.
+ */
 insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
   
-% Bergsteigen mit Backtracking
+/**
+ * Bergsteigen mit Backtracking
+ * Hinzufügen der nach der Heuristik sortierten neuen Pfade an den Anfang der Suchpfade.
+ */
 insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],SortedNewPaths),
@@ -149,7 +174,12 @@ insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
   write_action(AllPaths),
   write_state(AllPaths).
 
-% Iterative Tiefensuche
+/**
+ * Iterative Tiefensuche
+ * Iteriert immer eine Ebene tiefer in den Suchbaum hinunter.
+ * Die Suche verläuft dann nach dem Prinzip der Tiefensuche.
+ * Über setdepth() wird die Tiefe verwaltet.
+ */
 insert_new_paths(iterativeDeepening,NewPaths,OldPaths,AllPaths):-
   setdepth(NewPaths),
   insert_new_paths(depth,NewPaths,OldPaths,AllPaths),

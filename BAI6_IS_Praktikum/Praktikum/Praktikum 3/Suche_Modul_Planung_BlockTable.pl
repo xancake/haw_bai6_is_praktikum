@@ -141,8 +141,13 @@ state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 eval_path(ohnePfadkosten, [(_,State,Value)|_])        :- eval_state(State, Value).
 eval_path(mitPfadkosten,  [(_,State,Value)|RestPath]) :- eval_state(State, StateValue), length(RestPath, PathLength), Value is StateValue + PathLength.
+
 /*
 % Anzahl überschneidender Zustände
+% Hier wird überprüft wieviele Prädikate aus dem aktuellen Zustand den
+% Prädikaten des Zielzustands entsprechen.
+% Unterschätzen: Da wir nur angeben wieviele Prädikate noch bis zum Zielzustand
+% fehlen, aber es auch mehr Schritte sein könnten, um den Zielzustand zu erreichen.
 eval_state(State, Value) :-
   goal_description(GoalState),
   intersection(State, GoalState, Intersection), % Schnittmenge berechnen
@@ -152,6 +157,8 @@ eval_state(State, Value) :-
 */
 %/*
 % Anzahl der Blöcke auf allen Blöcken die im Zielzustand frei sein sollen
+% Schlechter als die andere Heuristik, weil hier nur ein Teil des Zielzustands
+% in Betracht gezogen wird.
 eval_state(State, Value) :-
   goal_description(GoalState),
   findall(X, member(clear(X), GoalState), ClearBlocks),
