@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.constraints.solver;
+package org.haw.is.praktikum4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.haw.is.praktikum4.constraints.solver.Constraint.Function;
+import org.haw.is.praktikum4.constraints.ConstraintNet;
+import org.haw.is.praktikum4.constraints.Variable;
+import org.haw.is.praktikum4.constraints.constraint.AllUniqueConstraint;
+import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
+import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.Function;
 
 public class EinsteinRaetsel {
 	private static final Set<Integer> WERTEBEREICH = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(1,2,3,4,5)));
@@ -54,22 +58,22 @@ public class EinsteinRaetsel {
 		Function links_neben = (l,r) -> l+1==r;
 		Function gleich      = (l,r) -> l==r;
 		
-		List<Constraint> constraints = Arrays.asList(
-				new Constraint("Der Brite lebt im roten Haus", Brite, rot, gleich),
-				new Constraint("Der Schwede hält sich einen Hund", Schwede, Hund, gleich),
-				new Constraint("Der Däne trinkt gern Tee", Daene, Tee, gleich),
-				new Constraint("Das grüne Haus steht links neben dem weißen Haus", gruen, weiss, links_neben),
-				new Constraint("Der Besitzer des grünen Hauses trinkt Kaffee", gruen, Kaffee, gleich),
-				new Constraint("Die Person, die Pall Mall raucht, hat einen Vogel", PallMall, Vogel, gleich),
-				new Constraint("Der Mann im mittleren Haus trinkt Milch", mittleresHaus, Milch, gleich),
-				new Constraint("Der Bewohner des gelben Hauses raucht Dunhill", gelb, Dunhill, gleich),
-				new Constraint("Der Norweger lebt im ersten Haus", Norweger, erstesHaus, gleich),
-				new Constraint("Der Malboro-Raucher wohnt neben der Person mit der Katze", Malboro, Katze, neben),
-				new Constraint("Der Mann mit dem Pferd lebt neben der Person, die Dunhill raucht", Pferd, Dunhill, neben),
-				new Constraint("Der Winfield-Raucher trinkt gern Bier", Winfield, Bier, gleich),
-				new Constraint("Der Norweger wohnt neben dem blauen Haus", Norweger, blau, neben),
-				new Constraint("Der Deutsche raucht Rothmanns", Deutscher, Rothmanns, gleich),
-				new Constraint("Der Malboro-Raucher hat einen Nachbarn, der Wasser trinkt", Malboro, Wasser, neben)
+		List<BinaryConstraint> constraints = Arrays.asList(
+				new BinaryConstraint("Der Brite lebt im roten Haus", Brite, rot, gleich),
+				new BinaryConstraint("Der Schwede hält sich einen Hund", Schwede, Hund, gleich),
+				new BinaryConstraint("Der Däne trinkt gern Tee", Daene, Tee, gleich),
+				new BinaryConstraint("Das grüne Haus steht links neben dem weißen Haus", gruen, weiss, links_neben),
+				new BinaryConstraint("Der Besitzer des grünen Hauses trinkt Kaffee", gruen, Kaffee, gleich),
+				new BinaryConstraint("Die Person, die Pall Mall raucht, hat einen Vogel", PallMall, Vogel, gleich),
+				new BinaryConstraint("Der Mann im mittleren Haus trinkt Milch", mittleresHaus, Milch, gleich),
+				new BinaryConstraint("Der Bewohner des gelben Hauses raucht Dunhill", gelb, Dunhill, gleich),
+				new BinaryConstraint("Der Norweger lebt im ersten Haus", Norweger, erstesHaus, gleich),
+				new BinaryConstraint("Der Malboro-Raucher wohnt neben der Person mit der Katze", Malboro, Katze, neben),
+				new BinaryConstraint("Der Mann mit dem Pferd lebt neben der Person, die Dunhill raucht", Pferd, Dunhill, neben),
+				new BinaryConstraint("Der Winfield-Raucher trinkt gern Bier", Winfield, Bier, gleich),
+				new BinaryConstraint("Der Norweger wohnt neben dem blauen Haus", Norweger, blau, neben),
+				new BinaryConstraint("Der Deutsche raucht Rothmanns", Deutscher, Rothmanns, gleich),
+				new BinaryConstraint("Der Malboro-Raucher hat einen Nachbarn, der Wasser trinkt", Malboro, Wasser, neben)
 		);
 		constraints.addAll(new AllUniqueConstraint(tiere).generateBinaryConstraints());
 		constraints.addAll(new AllUniqueConstraint(personen).generateBinaryConstraints());

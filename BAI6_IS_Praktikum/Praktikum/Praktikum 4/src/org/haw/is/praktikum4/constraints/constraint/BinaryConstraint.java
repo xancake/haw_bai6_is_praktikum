@@ -1,12 +1,14 @@
-package org.haw.is.praktikum4.constraints.solver;
+package org.haw.is.praktikum4.constraints.constraint;
 
-public class Constraint {
+import org.haw.is.praktikum4.constraints.Variable;
+
+public class BinaryConstraint {
 	private String Name;
 	private Variable Links;
 	private Variable Rechts;
 	private Function Funktion;
 	
-	public Constraint(String name, Variable links, Variable rechts, Function funktion) {
+	public BinaryConstraint(String name, Variable links, Variable rechts, Function funktion) {
 		Name = name;
 		Links = links;
 		Rechts = rechts;

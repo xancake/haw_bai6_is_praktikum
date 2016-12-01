@@ -1,9 +1,10 @@
-package org.haw.is.praktikum4.constraints.solver;
+package org.haw.is.praktikum4.constraints.constraint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.haw.is.praktikum4.constraints.solver.Constraint.Function;
+import org.haw.is.praktikum4.constraints.Variable;
+import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.Function;
 
 public class AllUniqueConstraint {
 	private static Function ungleich = (l,r) -> l!=r;
@@ -18,13 +19,13 @@ public class AllUniqueConstraint {
 		_variables = variables;
 	}
 	
-	public List<Constraint> generateBinaryConstraints() {
-		List<Constraint> constraints = new ArrayList<>();
+	public List<BinaryConstraint> generateBinaryConstraints() {
+		List<BinaryConstraint> constraints = new ArrayList<>();
 		for(int i=0; i<_variables.size(); i++) {
 			for(int j=i+1; j<_variables.size(); j++) {
 				Variable tierI = _variables.get(i);
 				Variable tierJ = _variables.get(j);
-				constraints.add(new Constraint(tierI.getName() + " ungleich " + tierJ.getName(), tierI, tierJ, ungleich));
+				constraints.add(new BinaryConstraint(tierI.getName() + " ungleich " + tierJ.getName(), tierI, tierJ, ungleich));
 			}
 		}
 		return constraints;

@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.constraints.solver;
+package org.haw.is.praktikum4.constraints;
 
 import java.util.Set;
 
