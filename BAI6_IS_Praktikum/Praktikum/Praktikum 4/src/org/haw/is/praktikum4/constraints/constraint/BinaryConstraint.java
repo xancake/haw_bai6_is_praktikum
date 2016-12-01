@@ -2,39 +2,36 @@ package org.haw.is.praktikum4.constraints.constraint;
 
 import org.haw.is.praktikum4.constraints.Variable;
 
-public class BinaryConstraint {
-	private String Name;
-	private Variable Links;
-	private Variable Rechts;
-	private Function Funktion;
+public class BinaryConstraint implements Constraint {
+	private String _name;
+	private Variable _links;
+	private Variable _rechts;
+	private BinaryCompareFunction _funktion;
 	
-	public BinaryConstraint(String name, Variable links, Variable rechts, Function funktion) {
-		Name = name;
-		Links = links;
-		Rechts = rechts;
-		Funktion = funktion;
+	public BinaryConstraint(String name, Variable links, Variable rechts, BinaryCompareFunction funktion) {
+		_name = name;
+		_links = links;
+		_rechts = rechts;
+		_funktion = funktion;
 	}
 	
 	public String getName() {
-		return Name;
+		return _name;
 	}
 	
 	public Variable getLinks() {
-		return Links;
+		return _links;
 	}
 	
 	public Variable getRechts() {
-		return Rechts;
+		return _rechts;
 	}
 	
-	public Function getFunktion() {
-		return Funktion;
-	}
-	
-	public boolean satisfied() {
-		for(Integer l : Links.getWertebereich()) {
-			for(Integer r : Rechts.getWertebereich()) {
-				if(!Funktion.eval(l, r)) {
+	@Override
+	public boolean isSatisfied() {
+		for(Integer l : _links.getWertebereich()) {
+			for(Integer r : _rechts.getWertebereich()) {
+				if(!_funktion.eval(l, r)) {
 					return false;
 				}
 			}
@@ -42,7 +39,31 @@ public class BinaryConstraint {
 		return true;
 	}
 	
-	public static interface Function {
-		public boolean eval(Integer links, Integer rechts);
+	public static interface BinaryCompareFunction {
+		boolean eval(Integer links, Integer rechts);
+		
+		static BinaryCompareFunction eq() {
+			return (l,r) -> l == r;
+		}
+		
+		static BinaryCompareFunction notEq() {
+			return (l,r) -> l != r;
+		}
+		
+		static BinaryCompareFunction less() {
+			return (l,r) -> l < r;
+		}
+		
+		static BinaryCompareFunction lessEq() {
+			return (l,r) -> l <= r;
+		}
+		
+		static BinaryCompareFunction more() {
+			return (l,r) -> l > r;
+		}
+		
+		static BinaryCompareFunction moreEq() {
+			return (l,r) -> l >= r;
+		}
 	}
 }

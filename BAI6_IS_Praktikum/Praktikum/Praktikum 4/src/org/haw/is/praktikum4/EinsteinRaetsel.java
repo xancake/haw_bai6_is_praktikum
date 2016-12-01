@@ -10,7 +10,10 @@ import org.haw.is.praktikum4.constraints.ConstraintNet;
 import org.haw.is.praktikum4.constraints.Variable;
 import org.haw.is.praktikum4.constraints.constraint.AllUniqueConstraint;
 import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.Function;
+import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.BinaryCompareFunction;
+import org.haw.is.praktikum4.constraints.constraint.Constraint;
+import org.haw.is.praktikum4.constraints.constraint.UnaryConstraint;
+import org.haw.is.praktikum4.constraints.constraint.UnaryConstraint.UnaryCompareFunction;
 
 public class EinsteinRaetsel {
 	private static final Set<Integer> WERTEBEREICH = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(1,2,3,4,5)));
@@ -51,23 +54,20 @@ public class EinsteinRaetsel {
 		Variable Rothmanns = new Variable("Rothmanns", copy(WERTEBEREICH));
 		List<Variable> zigaretten = Arrays.asList(PallMall, Dunhill, Malboro, Winfield, Rothmanns);
 		
-		Variable erstesHaus    = new Variable("Erstes Haus", new HashSet<>(Arrays.asList(1)));
-		Variable mittleresHaus = new Variable("Mittleres Haus", new HashSet<>(Arrays.asList(3)));
+		BinaryCompareFunction gleich      = BinaryCompareFunction.eq();
+		BinaryCompareFunction neben       = (l,r) -> l+1==r || l-1==r;
+		BinaryCompareFunction links_neben = (l,r) -> l+1==r;
 		
-		Function neben       = (l,r) -> l+1==r || l-1==r;
-		Function links_neben = (l,r) -> l+1==r;
-		Function gleich      = (l,r) -> l==r;
-		
-		List<BinaryConstraint> constraints = Arrays.asList(
+		List<Constraint> constraints = Arrays.asList(
 				new BinaryConstraint("Der Brite lebt im roten Haus", Brite, rot, gleich),
 				new BinaryConstraint("Der Schwede hält sich einen Hund", Schwede, Hund, gleich),
 				new BinaryConstraint("Der Däne trinkt gern Tee", Daene, Tee, gleich),
 				new BinaryConstraint("Das grüne Haus steht links neben dem weißen Haus", gruen, weiss, links_neben),
 				new BinaryConstraint("Der Besitzer des grünen Hauses trinkt Kaffee", gruen, Kaffee, gleich),
 				new BinaryConstraint("Die Person, die Pall Mall raucht, hat einen Vogel", PallMall, Vogel, gleich),
-				new BinaryConstraint("Der Mann im mittleren Haus trinkt Milch", mittleresHaus, Milch, gleich),
+				new UnaryConstraint("Der Mann im mittleren Haus trinkt Milch", Milch, UnaryCompareFunction.eq(3)),
 				new BinaryConstraint("Der Bewohner des gelben Hauses raucht Dunhill", gelb, Dunhill, gleich),
-				new BinaryConstraint("Der Norweger lebt im ersten Haus", Norweger, erstesHaus, gleich),
+				new UnaryConstraint("Der Norweger lebt im ersten Haus", Norweger, UnaryCompareFunction.eq(1)),
 				new BinaryConstraint("Der Malboro-Raucher wohnt neben der Person mit der Katze", Malboro, Katze, neben),
 				new BinaryConstraint("Der Mann mit dem Pferd lebt neben der Person, die Dunhill raucht", Pferd, Dunhill, neben),
 				new BinaryConstraint("Der Winfield-Raucher trinkt gern Bier", Winfield, Bier, gleich),
@@ -81,14 +81,14 @@ public class EinsteinRaetsel {
 		constraints.addAll(new AllUniqueConstraint(farben).generateBinaryConstraints());
 		constraints.addAll(new AllUniqueConstraint(zigaretten).generateBinaryConstraints());
 		
-		List<Variable> allVariables = new ArrayList<>();
-		allVariables.addAll(tiere);
-		allVariables.addAll(personen);
-		allVariables.addAll(getraenke);
-		allVariables.addAll(farben);
-		allVariables.addAll(zigaretten);
+		List<Variable> variables = new ArrayList<>();
+		variables.addAll(tiere);
+		variables.addAll(personen);
+		variables.addAll(getraenke);
+		variables.addAll(farben);
+		variables.addAll(zigaretten);
 		
-		ConstraintNet netz = new ConstraintNet(allVariables, constraints);
+		ConstraintNet netz = new ConstraintNet(variables, constraints);
 		
 		
 		

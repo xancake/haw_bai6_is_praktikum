@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.Function;
+import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.BinaryCompareFunction;
 
 public class AllUniqueConstraint {
-	private static Function ungleich = (l,r) -> l!=r;
+	private static BinaryCompareFunction ungleich = (l,r) -> l!=r;
 	
 	private List<Variable> _variables;
 	
