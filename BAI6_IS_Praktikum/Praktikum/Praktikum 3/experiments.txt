@@ -1,8 +1,43 @@
-informed:	% 17,879 inferences, 0.016 CPU in 0.310 seconds (5% CPU, 1144256 Lips)
-breadth:	% 57,020 inferences, 0.016 CPU in 0.972 seconds (2% CPU, 3649280 Lips)
-depth:		% 48,785 inferences, 0.000 CPU in 0.391 seconds (0% CPU, Infinite Lips)
+==================================================== Kleiner Zustandsraum =======================================================
+===== Laufzeiten =====
+depth						--	%   979 inferences, 0.000 CPU in 0.021 seconds ( 0% CPU, Infinite Lips)
+breadth						--  %   979 inferences, 0.000 CPU in 0.021 seconds ( 0% CPU, Infinite Lips)
+informed					h1	%   703 inferences, 0.000 CPU in 0.021 seconds ( 0% CPU, Infinite Lips)
+astar						h1	%   854 inferences, 0.000 CPU in 0.024 seconds ( 0% CPU, Infinite Lips)
+bestFirst					h1	%   270 inferences, 0.000 CPU in 0.000 seconds ( ?% CPU, Infinite Lips) | No Solution
+optimisticHillClimbing		h1	%   699 inferences, 0.000 CPU in 0.030 seconds ( 0% CPU, Infinite Lips)
+backtrackingHillClimbing	h1	%   705 inferences, 0.000 CPU in 0.024 seconds ( 0% CPU, Infinite Lips)
+informed					h2	% 1,911 inferences, 0.000 CPU in 0.041 seconds ( 0% CPU, Infinite Lips)
+astar						h2	% 1,488 inferences, 0.000 CPU in 0.012 seconds ( 0% CPU, Infinite Lips)
+bestFirst					h2	% 1,495 inferences, 0.000 CPU in 0.011 seconds ( 0% CPU, Infinite Lips)
+optimisticHillClimbing		h2	% 1,461 inferences, 0.000 CPU in 0.000 seconds ( ?% CPU, Infinite Lips) | No Solution
+backtrackingHillClimbing	h2	% 1,499 inferences, 0.000 CPU in 0.016 seconds ( 0% CPU, Infinite Lips)
+iterativeDeepening			--	% 1,148 inferences, 0.016 CPU in 0.023 seconds (68% CPU,    73472 Lips)
 
-SOLUTION (informed):
+===== Lösungen =====
+Alle
+Action: start
+Action: pick_up(block2)
+Action: put_on_table(block2)
+
+==================================================== Zustandsraum aus Aufgabe ===================================================
+===== Laufzeiten =====
+depth						--	% 48,433 inferences, 0.000 CPU in 0.102 seconds ( 0% CPU, Infinite Lips)
+breadth						--  % 56,112 inferences, 0.000 CPU in 0.058 seconds ( 0% CPU, Infinite Lips)
+informed					h1	%  3,905 inferences, 0.000 CPU in 0.036 seconds ( 0% CPU, Infinite Lips)
+astar						h1	% 17,675 inferences, 0.000 CPU in 0.060 seconds ( 0% CPU, Infinite Lips)
+bestFirst					h1	%    443 inferences, 0.000 CPU in 0.000 seconds ( ?% CPU, Infinite Lips) | No Solution
+optimisticHillClimbing		h1	%  3,875 inferences, 0.000 CPU in 0.047 seconds ( 0% CPU, Infinite Lips)
+backtrackingHillClimbing	h1	%  3,897 inferences, 0.000 CPU in 0.053 seconds ( 0% CPU, Infinite Lips)
+informed					h2	% 35,597 inferences, 0.000 CPU in 0.045 seconds ( 0% CPU, Infinite Lips)
+astar						h2	% 55,531 inferences, 0.016 CPU in 0.052 seconds (30% CPU,  3553984 Lips)
+bestFirst					h2	% 35,181 inferences, 0.016 CPU in 0.054 seconds (29% CPU,  2251584 Lips)
+optimisticHillClimbing		h2	%  4,379 inferences, 0.000 CPU in 0.000 seconds ( ?% CPU, Infinite Lips) | No Solution
+backtrackingHillClimbing	h2	% 23,309 inferences, 0.000 CPU in 0.085 seconds ( 0% CPU, Infinite Lips)
+iterativeDeepening			--	% 61,046 inferences, 0.000 CPU in 0.052 seconds ( 0% CPU, Infinite Lips)
+
+===== Lösungen =====
+Alle außer depth und backtrackingHillClimbing (h2)
 Action: start
 Action: pick_up(block1)
 Action: put_on_table(block1)
@@ -11,16 +46,7 @@ Action: put_on(block1,block4)
 Action: pick_up(block2)
 Action: put_on(block4,block2)
 
-SOLUTION (breadth):
-Action: start
-Action: pick_up(block1)
-Action: put_on_table(block1)
-Action: pick_up(block4)
-Action: put_on(block1,block4)
-Action: pick_up(block2)
-Action: put_on(block4,block2)
-
-SOLUTION (depth):
+depth
 Action: start
 Action: pick_up(block3)
 Action: put_on(block4,block3)
@@ -55,11 +81,76 @@ Action: put_on_table(block3)
 Action: pick_up(block2)
 Action: put_on(block4,block2)
 
+backtrackingHillClimbing (h2)
+Action: start
+Action: pick_up(block1)
+Action: put_on(block4,block1)
+Action: pick_up(block2)
+Action: put_on(block3,block2)
+Action: pick_up(block1)
+Action: put_on_table(block1)
+Action: pick_up(block2)
+Action: put_on(block1,block2)
+Action: pick_up(block3)
+Action: put_on(block4,block3)
+Action: pick_up(block2)
+Action: put_on_table(block2)
+Action: pick_up(block3)
+Action: put_on(block1,block3)
+Action: pick_up(block4)
+Action: put_on(block2,block4)
+Action: pick_up(block3)
+Action: put_on_table(block3)
+Action: pick_up(block4)
+Action: put_on(block1,block4)
+Action: pick_up(block2)
+Action: put_on(block4,block2)
 
-// Kleiner Zustandsraum
-informed	h2	% 35,988 inferences, 0.031 CPU in 1.514 seconds (2% CPU, 1151616 Lips)
-astar		h2	% 56,801 inferences, 0.016 CPU in 2.156 seconds (1% CPU, 3635264 Lips)
+==================================================== Großer Zustandsraum ========================================================
+===== Laufzeiten =====
+depth						--	% 1,250,116,764 inferences, 220.859 CPU in 221.481 seconds (100% CPU,  5660239 Lips) | Execution Aborted
+breadth						--  % 2,385,118,180 inferences, 224.484 CPU in 225.081 seconds (100% CPU, 10624874 Lips) | Execution Aborted
+informed					h1	%   107,078,827 inferences,  16.531 CPU in  16.673 seconds ( 99% CPU,  6477358 Lips) | ERROR: Out of global stack
+astar						h1	%     1,051,861 inferences,   0.172 CPU in   0.178 seconds ( 96% CPU,  6119919 Lips)
+bestFirst					h1	%   107,079,252 inferences,  16.234 CPU in  16.366 seconds ( 99% CPU,  6595835 Lips) | ERROR: Out of global stack
+optimisticHillClimbing		h1	%       310,938 inferences,   0.063 CPU in   0.065 seconds ( 96% CPU,  4975008 Lips) | No Solution
+backtrackingHillClimbing	h1	%     4,285,573 inferences,   0.859 CPU in   1.324 seconds ( 65% CPU,  4986849 Lips)
+informed					h2	%   157,486,457 inferences,  30.500 CPU in  33.039 seconds ( 92% CPU,  5163490 Lips)
+astar						h2	%   104,460,516 inferences,  13.953 CPU in  14.252 seconds ( 98% CPU,  7486532 Lips) | ERROR: Out of global stack
+bestFirst					h2	%   157,486,457 inferences,  30.281 CPU in  32.688 seconds ( 93% CPU,  5200791 Lips)
+optimisticHillClimbing		h2	%   563,704,302 inferences, 110.406 CPU in 110.971 seconds ( 99% CPU,  5105728 Lips) | Execution Aborted
+backtrackingHillClimbing	h2	%   465,996,997 inferences,  92.203 CPU in  92.786 seconds ( 99% CPU,  5054026 Lips) | Execution Aborted
+iterativeDeepening			--	%    33,995,279 inferences,   5.938 CPU in   6.010 seconds ( 99% CPU,  5725521 Lips)
 
-// Großer Zustandsraum
-informed	h1	% 107,101,992 inferences, 19.953 CPU in 115.690 seconds (17% CPU, 5367680 Lips) | ERROR: Out of global stack
-astar		h1	% 1,053,555 inferences, 0.172 CPU in 7.801 seconds (2% CPU, 6129775 Lips)
+===== Lösungen =====
+astar (h1)
+Action: start
+Action: pick_up(block3)
+Action: put_on_table(block3)
+Action: pick_up(block2)
+Action: put_on(block3,block2)
+Action: pick_up(block6)
+Action: put_on_table(block6)
+Action: pick_up(block5)
+Action: put_on_table(block5)
+Action: pick_up(block4)
+Action: put_on(block6,block4)
+
+iterativeDeepening
+Action: start
+Action: pick_up(block6)
+Action: put_on_table(block6)
+Action: pick_up(block3)
+Action: put_on_table(block3)
+Action: pick_up(block5)
+Action: put_on_table(block5)
+Action: pick_up(block4)
+Action: put_on(block6,block4)
+Action: pick_up(block2)
+Action: put_on(block3,block2)
+
+backtrackingHillClimbing (h1) -- ~250 Aktionen
+informed (h2) -- >1400 Aktionen
+bestFirst (h2) -- ~1300 Aktionen
+
+=================================================================================================================================

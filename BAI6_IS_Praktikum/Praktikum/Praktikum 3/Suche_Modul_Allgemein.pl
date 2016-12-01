@@ -29,17 +29,52 @@ write_actions([(Action,_,_)|Rest]):-
 % Abbruchbedingung: Wenn ein Zielzustand erreicht ist, wird der aktuelle Pfad an den
 % dritten Parameter übertragen.
 search([[FirstNode|Predecessors]|_],_,[FirstNode|Predecessors]) :- 
-  goal_node(FirstNode),
-  nl,write('SUCCESS'),nl,!.
+        goal_node(FirstNode),
+        nl,write('SUCCESS'),nl,!.
+        
+% Einstiegspunkt für die iterative Tiefensuche
+search(Paths,iterativeDeepening,Solution) :-
+        searchIterativeDeepening(Paths, Solution, 1).
 
+% Standard Einstieg für alle anderen Suchalgorithmen
+search([[FirstNode|Predecessors]|RestPaths],Strategy,Solution) :-
+        expand(FirstNode,Children),                                     % Nachfolge-Zustände berechnen
+        generate_new_paths(Children,[FirstNode|Predecessors],NewPaths), % Nachfolge-Zustände einbauen
+        insert_new_paths(Strategy,NewPaths,RestPaths,AllPaths),         % Neue Pfade einsortieren
+        search(AllPaths,Strategy,Solution).
 
-%search([[FirstNode|Predecessors]|RestPaths],iterativeDeepening,Solution) :- .
+/**
+ * Realisiert die iterative Vertiefung, indem das Bound iterativ inkrementiert wird.
+ * Im ersten Block wird die Suche für das aktuelle Bound umgesetzt und im zweiten inkrementiert
+ * und wieder aufgerufen, wenn im Ersten kein Zielzustand gefunden wurde.
+ */
+searchIterativeDeepening(Paths,Solution,Bound) :-
+        write_bound(Bound),
+        setdepth(Paths),
+        searchIterativeDeepeningHelper(Paths,Solution,Bound).
+searchIterativeDeepening(Paths,Solution,Bound) :-
+        NewBound is Bound+1,
+        searchIterativeDeepening(Paths,Solution,NewBound).
 
-search([[FirstNode|Predecessors]|RestPaths],Strategy,Solution) :- 
-  expand(FirstNode,Children),                                    % Nachfolge-Zustände berechnen
-  generate_new_paths(Children,[FirstNode|Predecessors],NewPaths), % Nachfolge-Zustände einbauen 
-  insert_new_paths(Strategy,NewPaths,RestPaths,AllPaths),        % Neue Pfade einsortieren
-  search(AllPaths,Strategy,Solution).
+/**
+ * Realisiert den Zielabgleich und das konkrete Suchen (Durchlauf bis Bound)
+ * Erste Block:   Abbruchbedingung, für Zustand ist Zielzustand
+ * Zweiter Block: Abbruchbedingung für Knoten deren Tiefe dem Bound entsprechen und dann
+ *                wird der Knoten verworfen und der Restpfad des Baumes abgearbeitet
+ * Dritter Block: Konkrete Suche (vgl. Standardsuche)
+ */
+searchIterativeDeepeningHelper([[FirstNode|Predecessors]|_],[FirstNode|Predecessors],_) :-
+        goal_node(FirstNode),
+        nl, write('SUCCESS'), nl, !.
+searchIterativeDeepeningHelper([[(_,_,Bound)|_]|RestPaths],Solution,Bound) :-
+        searchIterativeDeepeningHelper(RestPaths,Solution,Bound).
+searchIterativeDeepeningHelper([[FirstNode|Predecessors]|RestPaths],Solution,Bound) :-
+        FirstNode = (_,_,Depth), Depth < Bound,
+        write_depth(Depth, Bound),
+        expand(FirstNode,Children),                                       % Nachfolge-Zustände berechnen
+        generate_new_paths(Children,[FirstNode|Predecessors],NewPaths),   % Nachfolge-Zustände einbauen
+        insert_new_paths(iterativeDeepening,NewPaths,RestPaths,AllPaths), % Neue Pfade einsortieren
+        searchIterativeDeepeningHelper(AllPaths,Solution,Bound).
 
 
 generate_new_paths(Children,Path,NewPaths):-
@@ -67,12 +102,13 @@ get_state((_,State,_),State).
 
 
 %%% Strategie:
-write_action([[(Action,_)|_]|_])      :- nl,write('Action: '),write(Action),nl.
-write_next_state([[_,(_,State)|_]|_]) :- nl,write('Go on with: '),write(State),nl.
-write_state([[(_,State)|_]|_])        :- write('New State: '),write(State),nl.
-write_fail(depth,[[(_,State)|_]|_])   :- nl,write('FAIL, go on with: '),write(State),nl.
-write_fail(_,_)                       :- nl,write('FAIL').
-
+write_action([[(Action,_)|_]|_])      .%:- nl,write('Action: '),write(Action),nl.
+write_next_state([[_,(_,State)|_]|_]) .%:- nl,write('Go on with: '),write(State),nl.
+write_state([[(_,State)|_]|_])        .%:- write('New State: '),write(State),nl.
+write_fail(depth,[[(_,State)|_]|_])   .%:- nl,write('FAIL, go on with: '),write(State),nl.
+write_fail(_,_)                       .%:- nl,write('FAIL').
+write_bound(Bound)                    .%:- write('=== Bound: '), write(Bound), nl.
+write_depth(Depth, Bound)             .%:- write('===== Depth: '), write(Depth), write('/'), write(Bound), nl.
 
 % Alle Strategien: Keine neuen Pfade vorhanden
 insert_new_paths(Strategy,[],OldPaths,OldPaths):-
@@ -96,28 +132,43 @@ insert_new_paths(informed,NewPaths,OldPaths,AllPaths):-
   write_action(AllPaths),
   write_state(AllPaths).
 
-% A* Suche
+/**
+ * A* Suche
+ * Sortiert alle Pfade im Suchpfad nach der Heuristik und verwendet dafür auch die Pfadkosten
+ */
 insert_new_paths(astar,NewPaths,OldPaths,AllPaths):-
   eval_paths(mitPfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
-% gierige Bestensuche
+/**
+ * gierige Bestensuche
+ * Sortiert alle Pfade im Suchpfad nach der Heuristik und verwendet dabei keine Pfadkosten
+ */
 insert_new_paths(bestFirst,NewPaths,OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,OldPaths,AllPaths),
   write_action(AllPaths),
   write_state(AllPaths).
 
-% optimistisches Bergsteigen
-insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,AllPaths):-
+/**
+ * Optimistisches Bergsteigen
+ * Verwerfen der alten Pfade, es wird immer der nach der heuristik am besten
+ * bewertete Knoten verfolgt. Dadurch nicht vollständig.
+ */
+insert_new_paths(optimisticHillClimbing,NewPaths,_OldPaths,[NewPath]):-
   eval_paths(ohnePfadkosten, NewPaths),
-  insert_new_paths_informed(NewPaths,[],AllPaths),
-  write_action(AllPaths),
-  write_state(AllPaths).
+  insert_new_paths_informed(NewPaths,[],[NewPath|_]),
+  NewPath = [(_,_,V1),(_,_,V2)|_],
+  V1 >= V2,
+  write_action([NewPath]),
+  write_state([NewPath]).
   
-% Bergsteigen mit Backtracking
+/**
+ * Bergsteigen mit Backtracking
+ * Hinzufügen der nach der Heuristik sortierten neuen Pfade an den Anfang der Suchpfade.
+ */
 insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
   eval_paths(ohnePfadkosten, NewPaths),
   insert_new_paths_informed(NewPaths,[],SortedNewPaths),
@@ -125,9 +176,18 @@ insert_new_paths(backtrackingHillClimbing,NewPaths,OldPaths,AllPaths):-
   write_action(AllPaths),
   write_state(AllPaths).
 
-% Iterative Tiefensuche
+/**
+ * Iterative Tiefensuche
+ * Iteriert immer eine Ebene tiefer in den Suchbaum hinunter.
+ * Die Suche verläuft dann nach dem Prinzip der Tiefensuche.
+ * Über setdepth() wird die Tiefe verwaltet.
+ */
 insert_new_paths(iterativeDeepening,NewPaths,OldPaths,AllPaths):-
-%funktion(Iterativen,NewPaths,OldPaths,AllPaths)
-  append(SortedNewPaths,OldPaths,AllPaths),
-  write_action(AllPaths),
+  setdepth(NewPaths),
+  insert_new_paths(depth,NewPaths,OldPaths,AllPaths),
   write_state(AllPaths).
+  
+% Nutzt das Value-Feld der Knoten um dort die Tiefe abzulegen, in der sich der Knoten im Suchbaum befindet
+setdepth([]).
+setdepth([K|R]) :- setdepthHelper(K),setdepth(R).
+setdepthHelper([(_,_,Value)|R]) :- length(R, Value).

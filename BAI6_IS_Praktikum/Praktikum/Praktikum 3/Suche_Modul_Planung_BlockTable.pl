@@ -13,71 +13,45 @@
 /*
 % Einfacher unvollständiger Zielzustand
 start_description([
-  block(block1),
-  block(block2),
-  block(block3),
-  on(table,block1),
-  on(block1,block2),
-  on(table,block3),
-  clear(block2),
-  clear(block3),
+  block(block1),  block(block2),  block(block3),
+  on(table,block1),  on(block1,block2),  on(table,block3),
+  clear(block2),  clear(block3),
   handempty
 ]).
 
 goal_description([
-  block(block1),
-  block(block2),
+  block(block1),  block(block2),
   on(table,block2)
+]).
+goal_description([
+  block(block1),  block(block2),  block(block3),
+  on(table,block2),  on(block2,_),
+  clear(block3)
 ]).
 */
 
 /*
 %Komplexerer Start- und Zielzustand
 start_description([
-  block(block1),
-  block(block2),
-  block(block3),
-  block(block4),
-  block(block5),
-  block(block6),
-  block(block7),
-  block(block8),
-  block(block9),
-  on(table,block1),
-  on(table,block4),
-  on(table,block7),
-  on(block1,block2),
-  on(block2,block3),
-  on(block4,block5),
-  on(block5,block6),
-  on(block7,block8),
-  on(block8,block9),
-  clear(block6),
-  clear(block3),
-  clear(block9),
+  block(block1),   block(block2),  block(block3),  block(block4),  block(block5),  block(block6),  block(block7),  block(block8),  block(block9),
+  on(table,block1),  on(table,block4),  on(table,block7),  on(block1,block2),  on(block2,block3),  on(block4,block5),  on(block5,block6),  on(block7,block8),  on(block8,block9),
+  clear(block6),  clear(block3),  clear(block9),
   handempty
 ]).
-
+*/
+/*
 goal_description([
-  block(block1),
-  block(block2),
-  block(block3),
-  block(block4),
-  block(block5),
-  block(block6),
-  block(block7),
-  block(block8),
-  block(block9),
-  on(table,block3),
-  on(table,block6),
-  on(table,block1),
-  on(table,block5),
-  on(block3,block2),
-  on(block6,block4),
-  clear(block2),
-  clear(block5),
-  clear(block1),
-  clear(block4),
+  block(block1),   block(block2),  block(block3),  block(block4),  block(block5),  block(block6),  block(block7),  block(block8),  block(block9),
+  on(table,block3),  on(table,block6),  on(table,block1),  on(table,block5),  on(block3,block2),  on(block6,block4),
+  clear(block2),  clear(block5),  clear(block1),  clear(block4),
+  handempty
+]).
+*/
+/*
+goal_description([
+  block(block1),  block(block2),  block(block3),  block(block4),  block(block5),  block(block6),  block(block7),  block(block8),  block(block9),
+  on(table,block3),  on(table,block6),  on(table,X),  on(table,Y),  on(block3,block2),  on(block6,block4),  on(X,block1),  on(Y,block5),  on(block5,Z),
+  clear(block2),  clear(Z),  clear(block1),  clear(block4),
   handempty
 ]).
 */
@@ -85,32 +59,16 @@ goal_description([
 %/*
 % Standard Start- und Zielzustand (aus Aufgabenstellung)
 start_description([
-  block(block1),
-  block(block2),
-  block(block3),
-  block(block4),  %mit Block4
-  on(table,block2),
-  on(table,block3),
-  on(block2,block1),
-  on(table,block4), %mit Block4
-  clear(block1),
-  clear(block3),
-  clear(block4), %mit Block4
+  block(block1),  block(block2),  block(block3),  block(block4),
+  on(table,block2),  on(table,block3),  on(block2,block1),  on(table,block4),
+  clear(block1),  clear(block3),  clear(block4),
   handempty
 ]).
 
 goal_description([
-  block(block1),
-  block(block2),
-  block(block3),
-  block(block4), %mit Block4
-  on(block4,block2), %mit Block4
-  on(table,block3),
-  on(table,block1),
-  on(block1,block4), %mit Block4
-%  on(block1,block2), %ohne Block4
-  clear(block3),
-  clear(block2),
+  block(block1),  block(block2),  block(block3),  block(block4),
+  on(block4,block2),  on(table,block3),  on(table,block1),  on(block1,block4),
+  clear(block3),  clear(block2),
   handempty
 ]).
 %*/
@@ -131,31 +89,38 @@ state_member(State,[FirstState|_]) :- subtract(State, FirstState, []), !. %State
 state_member(State,[_|RestStates]) :- state_member(State,RestStates).
 
 
-eval_path(heuristikOhnePfadkosten, [(_,State,Value)|_])        :- eval_state(State, Value).
-eval_path(heuristikMitPfadkosten,  [(_,State,Value)|RestPath]) :- eval_state(State, StateValue), length(RestPath, PathLength), Value is StateValue + PathLength.
-/*
+eval_path(ohnePfadkosten, [(_,State,Value)|_])        :- eval_state(State, Value).
+eval_path(mitPfadkosten,  [(_,State,Value)|RestPath]) :- eval_state(State, StateValue), length(RestPath, PathLength), Value is StateValue + PathLength.
+
+%/*
 % Anzahl überschneidender Zustände
+% Hier wird überprüft wieviele Prädikate aus dem aktuellen Zustand den
+% Prädikaten des Zielzustands entsprechen.
+% Unterschätzen: Da wir nur angeben wieviele Prädikate noch bis zum Zielzustand
+% fehlen, aber es auch mehr Schritte sein könnten, um den Zielzustand zu erreichen.
 eval_state(State, Value) :-
   goal_description(GoalState),
   intersection(State, GoalState, Intersection), % Schnittmenge berechnen
   length(Intersection, EqualStateCount),
   length(GoalState, GoalStateCount),
   Value is GoalStateCount - EqualStateCount.
-*/
-%/*
+%*/
+/*
 % Anzahl der Blöcke auf allen Blöcken die im Zielzustand frei sein sollen
+% Schlechter als die andere Heuristik, weil hier nur ein Teil des Zielzustands
+% in Betracht gezogen wird.
 eval_state(State, Value) :-
   goal_description(GoalState),
   findall(X, member(clear(X), GoalState), ClearBlocks),
-  write(ClearBlocks), write(" "), write(State), write(" "),
-  sum_blocks_over_blocks(ClearBlocks, State, Value),
-  write(Value), nl.
+  %write(ClearBlocks), write(" "), write(State), write(" "),
+  sum_blocks_over_blocks(ClearBlocks, State, Value).
+  %write(Value), nl.
 sum_blocks_over_blocks([],    _,     0).
 sum_blocks_over_blocks([K|R], State, Count) :- count_blocks_over_block(K, State, Value), sum_blocks_over_blocks(R, State, Sum), Count is Value+Sum.
 count_blocks_over_block(Block, State, Count) :- member(holding(Block), State), Count is 0. % Spezialfall, wenn der Block gerade in der Hand ist
 count_blocks_over_block(Block, State, Count) :- member(clear(Block), State), Count is 0.
 count_blocks_over_block(Block, State, Count) :- member(on(Block, X), State), count_blocks_over_block(X, State, XCount), Count is XCount+1.
-%*/
+*/
 
 %action(Name,           Prüf-Liste,                               Del-Liste,                          Add-Liste)
 action(pick_up(X),      [handempty, clear(X), on(table,X)],       [handempty, clear(X), on(table,X)], [holding(X)]).
@@ -164,16 +129,21 @@ action(put_on_table(X), [holding(X)],                             [holding(X)], 
 action(put_on(Y,X),     [holding(X), clear(Y)],                   [holding(X), clear(Y)],             [handempty, clear(X), on(Y,X)]).
 
 
-% Hilfskonstrukt, weil das PROLOG "subset" nicht die Unifikation von Listenelementen 
-% durchführt, wenn Variablen enthalten sind. "member" unifiziert hingegen.
-mysubset([],_).
-mysubset([H|T],List) :- member(H,List), mysubset(T,List).
-
   
 expand((_,State,_), Result) :- findall((Name,NewState,_), expand_help(State,Name,NewState), Result).
 
+/**
+ * In action/4 wird zuerst die erste Aktion gewählt (durch Backtracking bzw findall aus expand/2 später andere).
+ * Durch mysubset/2 wird dann unifiziert und die erste Belegung genommen die passt.
+ * Anschließend werden die DEL- und ADD-Listen auf den Zustand angewendet.
+ */
 expand_help(State,Name,NewState) :-
         action(Name, Pruef, Del, Add),
         mysubset(Pruef, State),
         subtract(State, Del, Erg),
         append(Erg, Add, NewState).
+
+% Hilfskonstrukt, weil das PROLOG "subset" nicht die Unifikation von Listenelementen
+% durchführt, wenn Variablen enthalten sind. "member" unifiziert hingegen.
+mysubset([],_).
+mysubset([H|T],List) :- member(H,List), mysubset(T,List).
