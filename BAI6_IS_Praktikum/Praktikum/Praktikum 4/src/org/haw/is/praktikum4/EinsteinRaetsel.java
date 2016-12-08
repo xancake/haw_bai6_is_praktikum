@@ -89,7 +89,8 @@ public class EinsteinRaetsel {
 		ConstraintSolver solver = new ConstraintSolver();
 		solver.solve(netz);
 		
-		System.out.print("");
-//		Ergebnis ergebnis = solver.solve(netz);
+		for(Variable v : netz.getVariables()) {
+			System.out.println(v.getName() + " = " + v.getWertebereich());
+		}
 	}
 }

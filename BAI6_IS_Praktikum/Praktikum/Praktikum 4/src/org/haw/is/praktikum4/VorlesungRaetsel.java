@@ -31,6 +31,8 @@ public class VorlesungRaetsel {
 		ConstraintSolver solver = new ConstraintSolver();
 		solver.solve(net);
 		
-		System.out.println();
+		for(Variable var : net.getVariables()) {
+			System.out.println(var.getName() + " = " + var.getWertebereich());
+		}
 	}
 }
