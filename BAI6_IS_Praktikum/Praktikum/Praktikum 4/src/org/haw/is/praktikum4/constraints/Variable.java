@@ -1,14 +1,17 @@
 package org.haw.is.praktikum4.constraints;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Variable {
 	private String _name;
 	private Set<Integer> _wertebereich;
 	
-	public Variable(String name, Set<Integer> wertebereich) {
-		_name = name;
-		_wertebereich = wertebereich;
+	public Variable(String name, Collection<Integer> wertebereich) {
+		_name = Objects.requireNonNull(name);
+		_wertebereich = new HashSet<>(Objects.requireNonNull(wertebereich));
 	}
 	
 	public String getName() {
@@ -42,5 +45,10 @@ public class Variable {
 		} else if(!_name.equals(other._name))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return _name + " (" + _wertebereich + ")";
 	}
 }

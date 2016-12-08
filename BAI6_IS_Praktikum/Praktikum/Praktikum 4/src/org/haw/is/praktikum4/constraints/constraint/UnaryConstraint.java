@@ -24,12 +24,21 @@ public class UnaryConstraint implements Constraint {
 	
 	@Override
 	public boolean isSatisfied() {
-		for(Integer d : _variable.getWertebereich()) {
-			if(!_function.eval(d)) {
+		for(Integer x : _variable.getWertebereich()) {
+			if(!isConsistent(x)) {
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	public boolean isConsistent(Integer x) {
+		return _function.eval(x);
+	}
+	
+	@Override
+	public boolean usesVariable(Variable v) {
+		return _variable.equals(v);
 	}
 	
 	public static interface UnaryCompareFunction {

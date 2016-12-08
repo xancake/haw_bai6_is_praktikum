@@ -1,5 +1,6 @@
 package org.haw.is.praktikum4.constraints.constraint;
 
+import java.util.Objects;
 import org.haw.is.praktikum4.constraints.Variable;
 
 public class BinaryConstraint implements Constraint {
@@ -9,10 +10,13 @@ public class BinaryConstraint implements Constraint {
 	private BinaryCompareFunction _funktion;
 	
 	public BinaryConstraint(String name, Variable links, Variable rechts, BinaryCompareFunction funktion) {
-		_name = name;
-		_links = links;
-		_rechts = rechts;
-		_funktion = funktion;
+		if(links.equals(rechts)) {
+			throw new IllegalArgumentException("Die übergebenen Variablen müssen unterschiedlich sein!");
+		}
+		_name = Objects.requireNonNull(name);
+		_links = Objects.requireNonNull(links);
+		_rechts = Objects.requireNonNull(rechts);
+		_funktion = Objects.requireNonNull(funktion);
 	}
 	
 	public String getName() {
@@ -31,12 +35,21 @@ public class BinaryConstraint implements Constraint {
 	public boolean isSatisfied() {
 		for(Integer l : _links.getWertebereich()) {
 			for(Integer r : _rechts.getWertebereich()) {
-				if(!_funktion.eval(l, r)) {
+				if(!isConsistent(l, r)) {
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+	
+	public boolean isConsistent(Integer x, Integer y) {
+		return _funktion.eval(x, y);
+	}
+	
+	@Override
+	public boolean usesVariable(Variable v) {
+		return _links.equals(v) || _rechts.equals(v);
 	}
 	
 	public static interface BinaryCompareFunction {
