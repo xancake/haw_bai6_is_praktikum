@@ -110,7 +110,7 @@ public class ConstraintNet {
 		for(int i=from; i<to; i++) {
 			Variable vi = _variablen.get(i);
 			for(BinaryConstraint c : getBinaryConstraints()) {
-				if(c.usesVariable(v) && c.usesVariable(vi)) {
+				if(!v.equals(vi) && c.usesVariable(v) && c.usesVariable(vi)) {
 					neighbours.add(vi);
 					break;
 				}
