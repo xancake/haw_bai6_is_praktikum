@@ -41,6 +41,11 @@ public class UnaryConstraint implements Constraint {
 		return _variable.equals(v);
 	}
 	
+	@Override
+	public String toString() {
+		return _name;
+	}
+	
 	public static interface UnaryCompareFunction {
 		boolean eval(Integer value);
 		

@@ -52,6 +52,11 @@ public class BinaryConstraint implements Constraint {
 		return _links.equals(v) || _rechts.equals(v);
 	}
 	
+	@Override
+	public String toString() {
+		return _name;
+	}
+	
 	public static interface BinaryCompareFunction {
 		boolean eval(Integer links, Integer rechts);
 		
