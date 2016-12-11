@@ -18,7 +18,7 @@ public class ArcConsistency1 implements ArcConsistencyAlgorithm {
 			for(Pair<Variable, Variable> pair : q) {
 				Variable vk = pair.getKey();
 				Variable vm = pair.getValue();
-				change = ConstraintSolverUtils.revise(vk, vm, net) || change;
+				change = ConstraintSolverUtils.revise(net, vk, vm) || change;
 			}
 		} while(change);
 	}

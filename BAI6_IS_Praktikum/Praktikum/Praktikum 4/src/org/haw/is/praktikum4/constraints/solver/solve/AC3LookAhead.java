@@ -17,7 +17,7 @@ public class AC3LookAhead implements ConstraintNetSolver {
 			q.remove(arc);
 			Variable vk = arc.getKey();
 			Variable vm = arc.getValue();
-			if(ConstraintSolverUtils.revise(vk, vm, net)) {
+			if(ConstraintSolverUtils.revise(net, vk, vm)) {
 				q.addAll(getNeighbourArcsOfVk(net, vk, vm, cv));
 				consistent = !vk.getWertebereich().isEmpty();
 			}

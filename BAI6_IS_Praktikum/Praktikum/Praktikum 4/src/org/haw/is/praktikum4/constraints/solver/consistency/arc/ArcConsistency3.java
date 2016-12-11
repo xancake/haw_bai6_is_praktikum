@@ -17,7 +17,7 @@ public class ArcConsistency3 implements ArcConsistencyAlgorithm {
 			q.remove(arc);
 			Variable vk = arc.getKey();
 			Variable vm = arc.getValue();
-			if(ConstraintSolverUtils.revise(vk, vm, net)) {
+			if(ConstraintSolverUtils.revise(net, vk, vm)) {
 				q.addAll(getNeighbourArcs(net, vk, vm));
 			}
 		}

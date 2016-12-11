@@ -17,7 +17,7 @@ public class AC3BackTracking implements ConstraintNetSolver {
 			q.remove(arc);
 			Variable vk = arc.getKey();
 			Variable vm = arc.getValue();
-			consistent = !ConstraintSolverUtils.revise(vk, vm, net);
+			consistent = !ConstraintSolverUtils.revise(net, vk, vm);
 		}
 		return consistent;
 	}
