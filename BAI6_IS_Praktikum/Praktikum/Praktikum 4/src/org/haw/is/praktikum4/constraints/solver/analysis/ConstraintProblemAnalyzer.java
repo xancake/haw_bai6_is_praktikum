@@ -6,7 +6,7 @@ import org.haw.is.praktikum4.constraints.Variable;
 import org.haw.is.praktikum4.constraints.problem.ConstraintProblem;
 import org.haw.is.praktikum4.constraints.solver.ConstraintSolver;
 
-public class ConstraintProblemAnalyzer {
+public class ConstraintProblemAnalyzer extends ConstraintSolverAnalyzer_A {
 	private ConstraintSolver _solver;
 	
 	public ConstraintProblemAnalyzer(ConstraintSolver solver) {
@@ -35,5 +35,9 @@ public class ConstraintProblemAnalyzer {
 		} else {
 			System.out.println("No Solution found in " + duration + "ms");
 		}
+	}
+	
+	public AnalysisResultList analyze(ConstraintProblem... problems) {
+		return analyzeProblems(_solver, problems);
 	}
 }
