@@ -1,8 +1,8 @@
-package org.haw.is.praktikum4;
+package org.haw.is.praktikum4.constraints.analysis.tests;
 
+import org.haw.is.praktikum4.constraints.analysis.ConstraintProblemAnalyzer;
 import org.haw.is.praktikum4.constraints.problem.VorlesungProblem;
 import org.haw.is.praktikum4.constraints.solver.LoggingConstraintSolver;
-import org.haw.is.praktikum4.constraints.solver.analysis.ConstraintProblemAnalyzer;
 
 public class VorlesungRaetsel {
 	public static void main(String[] args) {

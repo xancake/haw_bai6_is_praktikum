@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.constraints.solver.analysis;
+package org.haw.is.praktikum4.constraints.analysis;
 
 import java.util.Objects;
 import org.haw.is.praktikum4.constraints.ConstraintNet;

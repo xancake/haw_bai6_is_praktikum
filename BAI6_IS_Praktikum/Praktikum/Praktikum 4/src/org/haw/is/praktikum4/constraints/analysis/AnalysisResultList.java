@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.constraints.solver.analysis;
+package org.haw.is.praktikum4.constraints.analysis;
 
 import java.util.LinkedList;
 import java.util.List;

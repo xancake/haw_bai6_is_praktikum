@@ -5,7 +5,7 @@ import java.util.HashSet;
 import org.haw.is.praktikum4.constraints.ConstraintNet;
 import org.haw.is.praktikum4.constraints.Variable;
 import org.haw.is.praktikum4.constraints.solver.ConstraintSolverUtils;
-import org.haw.is.praktikum4.util.Pair;
+import org.haw.is.praktikum4.constraints.util.Pair;
 
 public class AC3BackTracking implements ConstraintNetSolver {
 	@Override

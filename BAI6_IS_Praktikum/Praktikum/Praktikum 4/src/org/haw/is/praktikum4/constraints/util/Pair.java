@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.util;
+package org.haw.is.praktikum4.constraints.util;
 
 import java.util.Objects;
 
