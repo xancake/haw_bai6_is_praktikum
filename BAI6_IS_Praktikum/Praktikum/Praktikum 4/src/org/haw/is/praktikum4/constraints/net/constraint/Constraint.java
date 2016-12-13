@@ -1,6 +1,6 @@
-package org.haw.is.praktikum4.constraints.constraint;
+package org.haw.is.praktikum4.constraints.net.constraint;
 
-import org.haw.is.praktikum4.constraints.Variable;
+import org.haw.is.praktikum4.constraints.net.Variable;
 
 public interface Constraint {
 	

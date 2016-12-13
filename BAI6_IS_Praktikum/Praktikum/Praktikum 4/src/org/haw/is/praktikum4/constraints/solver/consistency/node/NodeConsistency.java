@@ -1,9 +1,9 @@
 package org.haw.is.praktikum4.constraints.solver.consistency.node;
 
 import java.util.Iterator;
-import org.haw.is.praktikum4.constraints.ConstraintNet;
-import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.UnaryConstraint;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.Variable;
+import org.haw.is.praktikum4.constraints.net.constraint.UnaryConstraint;
 
 public class NodeConsistency implements NodeConsistencyAlgorithm {
 	@Override

@@ -1,10 +1,10 @@
-package org.haw.is.praktikum4.constraints.constraint;
+package org.haw.is.praktikum4.constraints.net.constraint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.BinaryCompareFunction;
+import org.haw.is.praktikum4.constraints.net.Variable;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint.BinaryCompareFunction;
 
 public class AllUniqueConstraint {
 	private static BinaryCompareFunction ungleich = (l,r) -> l!=r;

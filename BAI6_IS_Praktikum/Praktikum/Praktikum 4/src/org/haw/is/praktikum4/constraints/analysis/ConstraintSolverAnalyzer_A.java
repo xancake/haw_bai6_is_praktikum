@@ -1,6 +1,6 @@
 package org.haw.is.praktikum4.constraints.analysis;
 
-import org.haw.is.praktikum4.constraints.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
 import org.haw.is.praktikum4.constraints.problem.ConstraintProblem;
 import org.haw.is.praktikum4.constraints.solver.ConstraintSolver;
 

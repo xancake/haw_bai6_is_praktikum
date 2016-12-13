@@ -1,8 +1,8 @@
 package org.haw.is.praktikum4.constraints.solver.consistency.node;
 
 import java.util.Objects;
-import org.haw.is.praktikum4.constraints.ConstraintNet;
-import org.haw.is.praktikum4.constraints.Variable;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.Variable;
 
 public class LoggingNodeConsistencyAlgorithm implements NodeConsistencyAlgorithm {
 	private NodeConsistencyAlgorithm _delegate;

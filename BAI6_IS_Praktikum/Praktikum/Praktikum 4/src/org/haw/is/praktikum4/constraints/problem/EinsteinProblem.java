@@ -3,13 +3,13 @@ package org.haw.is.praktikum4.constraints.problem;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.haw.is.praktikum4.constraints.ConstraintNet;
-import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.AllUniqueConstraint;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.BinaryCompareFunction;
-import org.haw.is.praktikum4.constraints.constraint.UnaryConstraint;
-import org.haw.is.praktikum4.constraints.constraint.UnaryConstraint.UnaryCompareFunction;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.Variable;
+import org.haw.is.praktikum4.constraints.net.constraint.AllUniqueConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.UnaryConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint.BinaryCompareFunction;
+import org.haw.is.praktikum4.constraints.net.constraint.UnaryConstraint.UnaryCompareFunction;
 
 /**
  * Diese Klasse modelliert das Einstein-Problem als {@link ConstraintNet Constraint Netz}.

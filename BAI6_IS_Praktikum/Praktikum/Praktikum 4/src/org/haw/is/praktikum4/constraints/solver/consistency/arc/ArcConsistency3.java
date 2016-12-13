@@ -2,9 +2,9 @@ package org.haw.is.praktikum4.constraints.solver.consistency.arc;
 
 import java.util.Collection;
 import java.util.HashSet;
-import org.haw.is.praktikum4.constraints.ConstraintNet;
-import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.Variable;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint;
 import org.haw.is.praktikum4.constraints.solver.ConstraintSolverUtils;
 import org.haw.is.praktikum4.constraints.util.Pair;
 

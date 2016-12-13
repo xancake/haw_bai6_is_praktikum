@@ -1,6 +1,6 @@
 package org.haw.is.praktikum4.constraints.solver.solve;
 
-import org.haw.is.praktikum4.constraints.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
 
 /**
  * Schnittstelle für Lösungsalgorithmen.

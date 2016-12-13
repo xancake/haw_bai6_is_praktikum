@@ -1,7 +1,7 @@
-package org.haw.is.praktikum4.constraints.constraint;
+package org.haw.is.praktikum4.constraints.net.constraint;
 
 import java.util.Objects;
-import org.haw.is.praktikum4.constraints.Variable;
+import org.haw.is.praktikum4.constraints.net.Variable;
 
 public class BinaryConstraint implements Constraint {
 	private String _name;

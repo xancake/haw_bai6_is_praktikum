@@ -1,6 +1,6 @@
 package org.haw.is.praktikum4.constraints.problem;
 
-import org.haw.is.praktikum4.constraints.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
 
 /**
  * Generische Schnittstelle für Constraint Probleme.

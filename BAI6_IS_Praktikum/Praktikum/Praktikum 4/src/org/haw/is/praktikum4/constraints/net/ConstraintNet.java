@@ -1,11 +1,11 @@
-package org.haw.is.praktikum4.constraints;
+package org.haw.is.praktikum4.constraints.net;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.haw.is.praktikum4.constraints.constraint.AllUniqueConstraint;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
-import org.haw.is.praktikum4.constraints.constraint.UnaryConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.AllUniqueConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.UnaryConstraint;
 
 public class ConstraintNet {
 	private List<Variable> _variablen;

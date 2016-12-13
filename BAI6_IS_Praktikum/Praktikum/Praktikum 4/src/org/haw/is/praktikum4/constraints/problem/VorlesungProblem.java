@@ -2,10 +2,10 @@ package org.haw.is.praktikum4.constraints.problem;
 
 import java.util.Arrays;
 import java.util.Collection;
-import org.haw.is.praktikum4.constraints.ConstraintNet;
-import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint.BinaryCompareFunction;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.Variable;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint.BinaryCompareFunction;
 
 /**
  * Diese Klasse modelliert das Constraint-Problem aus der Intelligente Systeme Vorlesung als

@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.constraints;
+package org.haw.is.praktikum4.constraints.net;
 
 import java.util.Collection;
 import java.util.HashSet;

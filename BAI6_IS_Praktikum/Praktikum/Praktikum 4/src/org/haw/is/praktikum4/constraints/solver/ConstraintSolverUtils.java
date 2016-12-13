@@ -1,9 +1,9 @@
 package org.haw.is.praktikum4.constraints.solver;
 
 import java.util.Iterator;
-import org.haw.is.praktikum4.constraints.ConstraintNet;
-import org.haw.is.praktikum4.constraints.Variable;
-import org.haw.is.praktikum4.constraints.constraint.BinaryConstraint;
+import org.haw.is.praktikum4.constraints.net.ConstraintNet;
+import org.haw.is.praktikum4.constraints.net.Variable;
+import org.haw.is.praktikum4.constraints.net.constraint.BinaryConstraint;
 
 public final class ConstraintSolverUtils {
 	private ConstraintSolverUtils() {}
