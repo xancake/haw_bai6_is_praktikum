@@ -1,4 +1,4 @@
-package org.haw.is.praktikum4.constraints.analysis.tests;
+package org.haw.is.praktikum4.constraints.analysis.tests.basic;
 
 import org.haw.is.praktikum4.constraints.analysis.ConstraintProblemAnalyzer;
 import org.haw.is.praktikum4.constraints.problem.DameProblem;
