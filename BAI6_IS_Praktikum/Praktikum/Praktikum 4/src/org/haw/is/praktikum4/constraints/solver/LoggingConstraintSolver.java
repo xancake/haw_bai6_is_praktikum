@@ -7,18 +7,18 @@ import org.haw.is.praktikum4.constraints.solver.consistency.node.LoggingNodeCons
 import org.haw.is.praktikum4.constraints.solver.consistency.node.NodeConsistency;
 import org.haw.is.praktikum4.constraints.solver.consistency.node.NodeConsistencyAlgorithm;
 import org.haw.is.praktikum4.constraints.solver.solve.AC3ForwardChecking;
-import org.haw.is.praktikum4.constraints.solver.solve.ConstraintNetSolver;
+import org.haw.is.praktikum4.constraints.solver.solve.ConstraintSolveAlgorithm;
 
 public class LoggingConstraintSolver extends ConstraintSolver {
 	public LoggingConstraintSolver() {
 		this(new NodeConsistency(), new ArcConsistency3(), new AC3ForwardChecking());
 	}
 	
-	public LoggingConstraintSolver(NodeConsistencyAlgorithm nc, ArcConsistencyAlgorithm ac, ConstraintNetSolver resolver) {
+	public LoggingConstraintSolver(NodeConsistencyAlgorithm nc, ArcConsistencyAlgorithm ac, ConstraintSolveAlgorithm sa) {
 		super(
 				new LoggingNodeConsistencyAlgorithm(nc),
 				new LoggingArcConsistencyAlgorithm(ac),
-				resolver
+				sa
 		);
 	}
 }

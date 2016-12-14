@@ -1,15 +1,18 @@
 package org.haw.is.praktikum4.constraints.solver.solve;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.haw.is.praktikum4.constraints.net.ConstraintNet;
 import org.haw.is.praktikum4.constraints.net.Variable;
 import org.haw.is.praktikum4.constraints.solver.ConstraintSolverUtils;
 import org.haw.is.praktikum4.constraints.util.Pair;
 
-public class AC3LookAhead implements ConstraintNetSolver {
+public class AC3LookAhead implements ConstraintSolveAlgorithm {
 	@Override
-	public boolean resolve(ConstraintNet net, int cv) {
+	public boolean solve(ConstraintNet net, int cv) {
 		Collection<Pair<Variable, Variable>> q = getFollowingNeighbourArcs(net, cv);
 		boolean consistent = true;
 		while(!q.isEmpty() && consistent) {
@@ -42,5 +45,20 @@ public class AC3LookAhead implements ConstraintNetSolver {
 			}
 		}
 		return arcs;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Sichert alle Variablen von {@code cv} bis size({@link ConstraintNet#getVariables()}).
+	 */
+	@Override
+	public Map<Variable, Set<Integer>> backupWertebereich(ConstraintNet net, int cv) {
+		Map<Variable, Set<Integer>> backup = new HashMap<>();
+		for(int i=cv; i<net.getVariables().size(); i++) {
+			Variable vi = net.getVariables().get(i);
+			backup.put(vi, new HashSet<>(vi.getWertebereich()));
+		}
+		return backup;
 	}
 }

@@ -1,6 +1,5 @@
 package org.haw.is.praktikum4.constraints.solver;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,21 +13,21 @@ import org.haw.is.praktikum4.constraints.solver.consistency.arc.ArcConsistencyAl
 import org.haw.is.praktikum4.constraints.solver.consistency.node.NodeConsistency;
 import org.haw.is.praktikum4.constraints.solver.consistency.node.NodeConsistencyAlgorithm;
 import org.haw.is.praktikum4.constraints.solver.solve.AC3ForwardChecking;
-import org.haw.is.praktikum4.constraints.solver.solve.ConstraintNetSolver;
+import org.haw.is.praktikum4.constraints.solver.solve.ConstraintSolveAlgorithm;
 
 public class ConstraintSolver {
 	private NodeConsistencyAlgorithm _nc;
 	private ArcConsistencyAlgorithm _ac;
-	private ConstraintNetSolver _solver;
+	private ConstraintSolveAlgorithm _sa;
 	
 	public ConstraintSolver() {
 		this(new NodeConsistency(), new ArcConsistency3(), new AC3ForwardChecking());
 	}
 	
-	public ConstraintSolver(NodeConsistencyAlgorithm nc, ArcConsistencyAlgorithm ac, ConstraintNetSolver resolver) {
+	public ConstraintSolver(NodeConsistencyAlgorithm nc, ArcConsistencyAlgorithm ac, ConstraintSolveAlgorithm sa) {
 		_nc = Objects.requireNonNull(nc);
 		_ac = Objects.requireNonNull(ac);
-		_solver = Objects.requireNonNull(resolver);
+		_sa = Objects.requireNonNull(sa);
 	}
 	
 	/**
@@ -48,7 +47,7 @@ public class ConstraintSolver {
 	 * Sucht eine Lösung für das übergebene {@link ConstraintNet Constraint Netz}. Dabei werden die Variablen des
 	 * übergebenen Constraint Netzes nach und nach belegt. Diese Methode setzt die Belegung durch Rekursion um, wobei
 	 * der Rekursionsbaum den Suchbaum darstellt und damit zum Backtracking verwendet wird.
-	 * <p>Diese Methode verwendet den einen {@link ConstraintNetSolver} um 
+	 * <p>Diese Methode verwendet den einen {@link ConstraintSolveAlgorithm} um 
 	 * @param net Das {@link ConstraintNet Constraint Netz}
 	 * @param i Die Variable, die auf der Ebene belegt wird
 	 * @return {@code true} wenn die Variable mit Index {@code i} erfolgreich belegt werden konnte, ansonsten {@code false}
@@ -58,7 +57,7 @@ public class ConstraintSolver {
 			return true;
 		}
 		
-		Map<Variable, Set<Integer>> backup = backupWertebereich(net, i);
+		Map<Variable, Set<Integer>> backup = _sa.backupWertebereich(net, i);
 		
 		Variable v = net.getVariables().get(i);
 		Set<Integer> alterWertebereich = new HashSet<>(v.getWertebereich());
@@ -69,24 +68,13 @@ public class ConstraintSolver {
 			v.getWertebereich().clear();
 			v.getWertebereich().add(b);
 			
-			if(_solver.resolve(net, i) && solve(net, i+1)) {
+			if(_sa.solve(net, i) && solve(net, i+1)) {
 				return true;
-//				System.out.println(net.getVariables());
-//				return false;
 			}
 			
 			restoreWertebereich(backup);
 		}
 		return false;
-	}
-	
-	private Map<Variable, Set<Integer>> backupWertebereich(ConstraintNet net, int from) {
-		Map<Variable, Set<Integer>> backup = new HashMap<>();
-		for(int i=from; i<net.getVariables().size(); i++) {
-			Variable vi = net.getVariables().get(i);
-			backup.put(vi, new HashSet<>(vi.getWertebereich()));
-		}
-		return backup;
 	}
 	
 	private void restoreWertebereich(Map<Variable, Set<Integer>> backup) {

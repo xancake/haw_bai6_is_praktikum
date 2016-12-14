@@ -32,6 +32,10 @@ public class AnalysisResult {
 	}
 	
 	public void printDuration() {
-		System.out.println("Solution found in " + duration + "ms");
+		if(solutionFound) {
+			System.out.println("Solution found in " + duration + "ms");
+		} else {
+			System.out.println("No Solution found in " + duration + "ms");
+		}
 	}
 }
